@@ -121,8 +121,8 @@
 				'<b>FGx Plane Spotter r2</b><br><br>' +
 				'<p>View any location on earth in 3D at 90 meter resolution.</p>' +
 
-				'<p>The main issue is the app only reads one data tile at a time. ' +
-				'When you get an edge of a data tile, stuff on the other side gets very funny.</p>' +
+				'<p>The main issue is the app only reads one 3D data tile at a time. ' +
+				'When you get an edge of a data tile, the map is otally flat</p>' +
 
 				'<p>And, as the English say, mind the gaps...</p>' +
 
@@ -140,10 +140,11 @@
 //					'&bull; Mouse/trackpad: update heading<br>' +
 //				'</p>' +
 
-				'<a href="https://github.com/jaanga/terrain-viewer/tree/gh-pages/un-flatland" target="_blank">Source code</a><br>' +
+				'<a href="https://github.com/jaanga/fgx-plane-spotter" target="_blank">Source code</a><br>' +
 				'<small>credits: <a href="http://threejs.org" target="_blank">three.js</a> - ' +
 				'<a href="http://khronos.org/webgl/" target="_blank">webgl</a> - ' +
 				'<a href="http://jaanga.github.io" target="_blank">jaanga</a><br>' +
+				'<a href="http://www.viewfinderpanoramas.org/" target="_blank">Viewfinder Panoramas</a><br>' +
 				'copyright &copy; 2014 jaanga authors ~ MIT license</small><br><br>' +
 				'<i>Click anywhere in this message to hide...</i>' +
 		'</div>';
@@ -609,7 +610,7 @@
 	}
 
 	function viewPNG() {
-		window.location = 'http://jaanga.github.io/terrain-viewer/png-viewer/r2/png-viewer-r2.html#' + 
+		window.location = 'http://jaanga.github.io/terrain-viewer/png-viewer/r3/png-viewer-r3.html#' + 
 			lon2tile( parseFloat( lon), 7 ) + '#' + lat2tile( parseFloat(lat), 7 );
 	}
 

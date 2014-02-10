@@ -1,7 +1,9 @@
 ![FGx Logo]( http://fgx.github.io/images/fgx-cap-40x30.png)FGx Plane Spotter Read Me
 ====================================================================================
 
-Live demo: [FGx Plane Spotter r2]( http://jaanga.github.io/fgx-plane-spotter/r2/plane-spotter-r2.html "Happy spotting!")
+Live demo: [FGx Plane Spotter r2]( http://jaanga.github.io/fgx-plane-spotter/r2/fgx-plane-spotter-r2.html "Happy spotting!")
+
+Live demo: [FGx Plane Spotter r1]( http://jaanga.github.io/fgx-plane-spotter/r1/index.html "Happy spotting!")
 
 For the generic 3D map used as the basis here see also: [ Jaanga UnFlatland]( https://github.com/jaanga/cookbook/tree/gh-pages/un-flatland )
 
@@ -80,7 +82,7 @@ You have two ways of viewing the FGx Plane Spotter files:
 
 FGx home page: [fgx.ch]( http://www.fgx.ch )
 
-See also [Aircraft Spotting]( http://en.wikipedia.org/wiki/Aircraft_spotting )
+For a refeence as to the name of this repository see also [Aircraft Spotting]( http://en.wikipedia.org/wiki/Aircraft_spotting )
 
 ## Copyright Notice and License
 
@@ -90,6 +92,12 @@ This app is at an early and volatile stage. Not all licensing requirements may h
 
 
 ## Change Log
+
+2014-02-10 ~ Theo
+
+* r2 committed
+* In the jaanga project until CORS/forking strategy is worked out
+
 
 2013-12-20 ~ Theo
 

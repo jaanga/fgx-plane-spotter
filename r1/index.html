@@ -12,11 +12,6 @@
 <script src=http://mrdoob.github.io/three.js/examples/js/libs/stats.min.js></script>
 <!--
 <script src=http://mrdoob.github.com/three.js/examples/js/controls/FirstPersonControls.js></script>
-
-<script src='../../../../git-repos/three.js/build/three.min.js'></script>
-<script src='../../../../git-repos/three.js/examples/js/controls/TrackballControls.js'></script>
-<script src='../../../../git-repos/three.js/examples/js/libs/stats.min.js'></script>
-<script src='../../../../git-repos/three.js/examples/js/controls/FirstPersonControls.js'></script>
 -->
 <script src=first-person-controls-theo.js></script>
 <script>
@@ -246,7 +241,7 @@
 		FGx.elevationsImage = document.createElement('img' );
 		FGx.elevationsImage.onload = initCanvas;
 		//FGx.elevationsImage.src = "../../fgx-globe/cookbook/unicam/topo-" + elevZoom + "-" + FGx.elevTileYLat + "-" + FGx.elevTileXLng + ".png";
-FGx.elevationsImage.src = "../../../jaanga.github.io/projects/terrain-plus/unicam/topo-" + elevZoom + "-" + FGx.elevTileYLat + "-" + FGx.elevTileXLng + ".png";
+FGx.elevationsImage.src = "../../terrain-plus/unicam/topo-" + elevZoom + "-" + FGx.elevTileYLat + "-" + FGx.elevTileXLng + ".png";
 		//FGx.elevationsImage.src = "../../fgx-terrain/" + elevZoom + "/" + FGx.elevTileYLat + "" + FGx.elevTileXLng + ".png";
 //console.log( lng, lat, FGx.tileXLng, FGx.tileYLat, FGx.elevTileXLng, FGx.elevTileYLat )
 	}
@@ -337,12 +332,12 @@ zoomCtx = zoomCanvas.getContext("2d");
 
 		var loader = new THREE.JSONLoader();
 		
-		loader.load( '../../fgx-aircraft/data/seymour/seymour.js', function( geometry ) { 
+		loader.load( '../data/seymour.js', function( geometry ) { 
 			geometry.applyMatrix( new THREE.Matrix4().multiplyScalar( 3 ) );
 			FGx.seymour = geometry;
 		} );
 
-		loader.load( '../../fgx-aircraft/data/21/21.js', function( geometry ) { 
+		loader.load( '../data/21.js', function( geometry ) { 
 			geometry.applyMatrix( new THREE.Matrix4().makeRotationY( -Math.PI / 2 ) );
 			material = new THREE.MeshNormalMaterial();
 			FGx.myPlane = new THREE.Mesh( geometry, material );

@@ -245,7 +245,7 @@
 		var prev = heightMap.src;
 
 		if ( zoom < 8) {
-			heightMap.src =  '../../../jaanga.github.io/projects/terrain/' + zoom + '/' + xTile + '/' + yTile +'.png';
+			heightMap.src =  '../../terrain/' + zoom + '/' + xTile + '/' + yTile +'.png';
 
 			if ( heightMap.src !== prev ) {
 				heightMap.onload = initCanvasLowZoom;

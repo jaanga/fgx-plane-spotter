@@ -5,15 +5,16 @@
 <meta charset=utf-8>
 </head>
 <body>
-<script src = http://mrdoob.github.io/three.js/build/three.min.js ></script>
-<script src = http://mrdoob.github.io/three.js/examples/js/controls/TrackballControls.js ></script>
-<script src = http://mrdoob.github.io/three.js/examples/js/libs/stats.min.js ></script>
+<script src =http://mrdoob.github.io/three.js/examples/js/Detector.js ></script>
+<script src =http://mrdoob.github.io/three.js/build/three.min.js ></script>
+<script src =http://mrdoob.github.io/three.js/examples/js/controls/TrackballControls.js ></script>
+<script src =http://mrdoob.github.io/three.js/examples/js/libs/stats.min.js ></script>
 <script>
-
+// Airports to look at: EGLL KATL KJFK KSFO LFPG EGLL 
 	var zoom = 13;
 	var scaleVert = zoom - 3;
-	var fileName = '../data/apt1000-icao.csv';
-	//var fileName = 'http://fgx.github.io/fgx-plane-spotter/data/apt1000-icao.csv';
+	var fileName = '../apt1000/apt1000-ils.csv';
+
 	var gazetteer;
 	var airports = [];
 
@@ -40,13 +41,14 @@
 	var xDelta, yDelta;
 	var heightMap;
 	var terrain;
-	var placards;
+	var diagrams;
 
 	var renderer, scene, camera, controls, stats;
 	var canvas, context;
 	var vertsPerTile = 32;
 	var tilesPerSide = 8;
-	var pi = Math.PI;
+	var pi = Math.PI, pi05 = pi * 0.5;
+	var d2r = pi / 180, r2d = 180 / pi;  // degress / radians
 
 	init();
 	animate();
@@ -85,7 +87,7 @@
 		info = document.body.appendChild( document.createElement( 'div' ) );
 		info.style.cssText = ' background-color: #ccc; left: 20px; opacity:0.8; padding: 10px; position: absolute; top: 20px;';
 		info.innerHTML =  '<div onclick=info.style.display="none";stats.domElement.style.display="none"; >[x]</div>' +
-			'<h1><a href="" >FGx<br>Plane Spotter r2</a> ' +
+			'<h1><a href="" >FGx Plane Spotter<br>r2</a> ' +
 			'<a href=# title="Get help and info" onclick=help.style.display="block"; ><large>&#x24D8;</large></a></h1>' +
 			'<div id=help onclick=help.style.display="none";></div>' +
 			'<div>' +
@@ -105,7 +107,7 @@
 					'onchange="inpLat.value = lat = airports[this.selectedIndex][2]; inpLon.value = lon = airports[this.selectedIndex][3]; setLocation();" >' +
 				'</select>' +
 
-				'<p><input id=chkPlacards type="checkbox" onchange=updatePlacards(); >Placards </p>' +
+				'<p><input id=chkdiagrams type="checkbox" onchange=updatediagrams(); >Diagrams</p>' +
 				'<a href=JavaScript:link(); >permalink</a> &nbsp;' +
 				'<a href=JavaScript:viewPNG(); >View PNG</a><hr>' +
 
@@ -164,7 +166,7 @@
 			}
 		}
 		selPlace.selectedIndex = startPlace;
-		selPlace.title = 'Choose one of ' +  airports.length + ' places';
+		selPlace.title = 'Choose one of ' +  airports.length + ' airports';
 
 		for ( var option, i = 0, len = mapTypes.length; i < len; i++ ) {
 			selMapType.appendChild( option = document.createElement( 'option' ) );
@@ -183,7 +185,7 @@
 		scene = new THREE.Scene();
 
 		camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 10000 );
-		camera.position.set( 0, 400, 1800 );
+		camera.position.set( 1200, 400, 2000 );
 		controls = new THREE.TrackballControls( camera, renderer.domElement );
 
 		THREE.ImageUtils.crossOrigin = 'anonymous';
@@ -232,10 +234,10 @@
 		inpLon.value = lon;
 		inpLat.value = lat;
 
-		txt += 'zoom ' + zoom + br;
-		txt += 'scale ' + scaleVert + br;
-		txt += 'mapType ' + mapType + br;
-		txt += 'tilesPerSide ' + tilesPerSide + br2;
+//		txt += 'zoom ' + zoom + br;
+//		txt += 'scale ' + scaleVert + br;
+//		txt += 'mapType ' + mapType + br;
+//		txt += 'tilesPerSide ' + tilesPerSide + br2;
 
 		txt += 'xTile ' + xTile + br;
 		txt += 'yTile ' + yTile + br;
@@ -315,7 +317,7 @@
 		}
 
 		scene.add( terrain );
-		updatePlacards();
+		updatediagrams();
 	}
 
 	function updateVertices( xTile, yTile, xPos, yPos ) {
@@ -409,10 +411,10 @@
 		terrain = new THREE.Mesh( geometry, material );
 		scene.add( terrain );
 
-		if ( placards && placards.children.length > 0) {
-			scene.remove( placards );
-			placards.children.length = 0;
-			chkPlacards.checked = false;
+		if ( diagrams && diagrams.children.length > 0) {
+			scene.remove( diagrams );
+			diagrams.children.length = 0;
+			chkdiagrams.checked = false;
 		}
 	}
 
@@ -447,16 +449,16 @@
 		setLocation();
 	}
 
-	function updatePlacards( ttt ) {
+	function updatediagrams( ttt ) {
 
-		if ( placards && placards.children.length > 0) {
-			scene.remove( placards );
-			placards.children.length = 0;
+		if ( diagrams && diagrams.children.length > 0) {
+			scene.remove( diagrams );
+			diagrams.children.length = 0;
 		}
-		if ( !chkPlacards.checked ) return;
+		if ( !chkdiagrams.checked ) return;
 
-		placards = new THREE.Object3D;
-		scene.add( placards );
+		diagrams = new THREE.Object3D;
+		scene.add( diagrams );
 
 		var place, mesh, x, y, z;
 
@@ -481,7 +483,9 @@
 		var deltaLatHM = Math.abs( tile2lat( yHeightMapTile, 7 ) - tile2lat( yHeightMapTile + 1, 7 ));
 
 		geometry = new THREE.CubeGeometry( 5, 1, 5 );
-		material = new THREE.MeshBasicMaterial( { color: 0xff0000, opacity: 0.5, transparent: true });
+		
+
+		var xStart, yStart, xEnd, yEnd, vStart, vEnd, run, ils;
 		for ( var i = 0, iLen = gazetteer.length; i < iLen; i++ ) {
 			place = gazetteer[i];
 
@@ -489,16 +493,16 @@
 				if ( ( zoom > 10 ) || ( (zoom > 7) && (place[5] > 0) )  || ( place[5] > 3 ) ) {
 					xStart = canvasTest.width * Math.abs( ulLonHM - ulLng ) /  deltaLonHM;
 					yStart = canvasTest.height * Math.abs( ulLatHM - ulLat ) /  deltaLatHM;
-					xFinish = canvasTest.width * Math.abs( ulLng - lrLng ) /  deltaLonHM;
-					yFinish = canvasTest.height * Math.abs( ulLat - lrLat ) /  deltaLonHM;
+					xEnd = canvasTest.width * Math.abs( ulLng - lrLng ) /  deltaLonHM;
+					yEnd = canvasTest.height * Math.abs( ulLat - lrLat ) /  deltaLonHM;
 
 					contextTest.lineWidth = 1 ;
 					contextTest.strokeStyle = '#ff0000';
-					contextTest.strokeRect(  xStart - 20, yStart - 20, xFinish + 40, yFinish + 40);
+					contextTest.strokeRect(  xStart - 20, yStart - 20, xEnd + 40, yEnd + 40);
 
 					xStart = canvasTest.width * Math.abs( ulLonHM - place[3] ) /  deltaLonHM;
 					yStart = canvasTest.height * ( ulLatHM - place[2] ) /  deltaLatHM;
-	// console.log( xStart, yStart);
+// console.log( xStart, yStart);
 					var spot = contextTest.getImageData( xStart, yStart, 1, 1 ).data;
 					contextTest.lineWidth = 1 ;
 					contextTest.strokeStyle = '#ff0000';
@@ -506,26 +510,74 @@
 					contextTest.fillStyle = '#ff0000';
 					contextTest.font = '12px sans-serif';
 					//contextTest.fillText(  ( place[0] + ' - altitude: ' + (spot[0] - 1.5 ) * 20), xStart + 15, yStart + 5 );
-	//console.log( place[0], spot);
+//console.log( place[0], spot);
 
 					x = 256 * tilesPerSide * ( place[3] - lrLng  ) / deltaLngs;
 					z = 256 * tilesPerSide * ( ulLat - place[2] ) / deltaLats;
 					y = ( 5 * spot[0] );
+					geometry = new THREE.CubeGeometry( 5, 1, 5 );
+					material = new THREE.MeshBasicMaterial( { color: 0x00ff00, opacity: 0.5, transparent: true });
 					mesh = new THREE.Mesh( geometry, material );
 					mesh.position.set( x + 1536, 0.5 * y, z - 512);
 					mesh.scale.y = y;
-					placards.add( mesh );
-	// console.log( terrain.geometry.boundingBox.max.y );
+					diagrams.add( mesh );
+// console.log( terrain.geometry.boundingBox.max.y );
 					var texture = canvasText ( place[0] + ' ' + place[1] + ' - altitude: ' + (spot[0] - 1.5 ) * 20 ) ;
 					var spriteMaterial = new THREE.SpriteMaterial( { map: texture, useScreenCoordinates: false, opacity: 1 } );
 					sprite = new THREE.Sprite( spriteMaterial );
 					sprite.position.set(  x + 1536, 200 +  ( 7 * spot[0] ), z - 512 );
 					sprite.scale.set( 500, 100, 1 );
-					placards.add( sprite );
+					diagrams.add( sprite );
 
 					airportData = requestFile( '../apt1000/' +  place[0] + '.json' );
-// console.log( airportData );
+					var data = JSON.parse( airportData );
+					//y = 5 * spot[0];
+					for (var j = 0, len = data.runways.length; j < len; j++) {
+						run = data.runways[j];
 
+						xStart = 256 * tilesPerSide * ( run.lon1- lrLng ) / deltaLngs;
+						zStart = 256 * tilesPerSide * ( ulLat - run.lat1 ) / deltaLats;
+						xEnd = 256 * tilesPerSide * ( run.lon2- lrLng ) / deltaLngs;
+						zEnd = 256 * tilesPerSide * ( ulLat - run.lat2 ) / deltaLats;
+
+						vStart = v( xStart, y, zStart );
+						vEnd = v( xEnd, y, zEnd );
+						length = vStart.distanceTo( vEnd );
+						geometry = new THREE.CubeGeometry( 10, 10, length );
+						
+						mesh = new THREE.Mesh( geometry, material );
+						mesh.position.set(  xStart + 1536, y, zStart - 512 );
+						mesh.rotation.y = ( run.hdg) * -d2r;
+
+						// mesh.lookAt( vStart );
+						mesh.translateZ( -0.5 * length );
+						diagrams.add( mesh );
+
+					}
+					material = new THREE.MeshBasicMaterial( { color: 0xff0000, opacity: 0.5, side: THREE.DoubleSide, transparent: true });
+					for (var j = 0, len = data.ils.length; j < len; j++) {
+						ils = data.ils[j];
+//	console.log( ils );
+						if ( ils.hdg) {
+							xStart = 256 * tilesPerSide * ( ils.lon- lrLng ) / deltaLngs;
+							zStart = 256 * tilesPerSide * ( ulLat - ils.lat ) / deltaLats;
+
+							length = 256 * tilesPerSide / deltaLats * ils.rng_nm / 57.2957795;
+// geometry = new THREE.CylinderGeometry( radiusTop, radiusBottom, height, radiusSegments, heightSegments, openEnded )
+							geometry = new THREE.CylinderGeometry( 30, 3, length, 20, 1, 1 );
+							geometry.applyMatrix( new THREE.Matrix4().makeTranslation( 0, 0.5 * length, 0) );
+							geometry.applyMatrix( new THREE.Matrix4().makeRotationX( -1.3 ) );
+
+							
+							mesh = new THREE.Mesh( geometry, material );
+							mesh.position.set(  xStart + 1536, y + 10, zStart - 512 );
+							mesh.rotation.y = ( ils.hdg) * -d2r;
+							// mesh.lookAt( vStart );
+							// mesh.translateZ( -0.5 * length );
+							diagrams.add( mesh );
+						}
+
+					}
 				}
 			}
 		}
@@ -542,8 +594,8 @@
 		canvas.height = 20; //204
 
 		context.lineWidth = 1 ;
-		context.strokeStyle = '#ff0000';
-		context.fillStyle = '#ff0000';
+		context.strokeStyle = '#00ff00';
+		context.fillStyle = '#00ff00';
 		context.strokeRect(0, 0, width.width + 10, 20);
 		context.font = '12px sans-serif';
 		context.fillText( text, 5, 15 );

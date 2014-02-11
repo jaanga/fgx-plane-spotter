@@ -1,28 +1,30 @@
-![FGx Logo]( http://fgx.github.io/images/fgx-cap-40x30.png)FGx Plane Spotter Read Me
+FGx Plane Spotter Read Me
 ====================================================================================
 
 Live demo: [FGx Plane Spotter r2]( http://jaanga.github.io/fgx-plane-spotter/r2/fgx-plane-spotter-r2.html "Happy spotting!")
 
 Live demo: [FGx Plane Spotter r1]( http://jaanga.github.io/fgx-plane-spotter/r1/index.html "Happy spotting!")
 
-For the generic 3D map used as the basis here see also: [ Jaanga UnFlatland]( https://github.com/jaanga/cookbook/tree/gh-pages/un-flatland )
+For the generic 3D map used as the basis here see also: [ Jaanga Terrain]( http://jaanga.github.io/terrain/ )  
+For other viewers of the data se also: [Jaanga Terrain Viewer]( http://jaanga.github.io/terrain-viewer/ )
 
-For [Leap Motion]( https://www.leapmotion.com/ ) device enabled and earlier versions see: [Flying Leap 3D]( https://github.com/jaanga/gestification/tree/gh-pages/projects/flying-leap-3d )
+For [Leap Motion]( http://www.leapmotion.com/ ) device enabled and earlier versions see: [Flying Leap 3D]( https://github.com/jaanga/gestification/tree/gh-pages/projects/flying-leap-3d )
 
 ## Concept
-View live [FGx Crossfeed]( http://crossfeed.fgx.ch/data ) data - showing current FlightGear sessions - in the context of an interactive 3D map.
+View live [FGx Crossfeed]( http://crossfeed.fgx.ch/data ) data - showing current FlightGear sessions - in the context of an interactive 3D map with 18 levels of zoom.
 
 ## Features
 * Shows FGx Crossfeed aircraft in 3D
 * First person controller displays selected aircraft in front of camera
 * Places dropdown lists the airports. 
-* See also: [Jaanga unFlatland Read Me]( http://jaanga.github.io/cookbook/un-flatland/index.html#features ).
+* See also the features of [Jaanga unFlatland]( http://jaanga.github.io/terrain-viewer/un-flatland/ ).
+	- FGx Plane Spotter is an app built on top of unFlatland which is a viewer of 3D [Jaanga Terrain]( http://jaanga.github.io/terrain/ ) data.
 
 ## Road Map
 
 ### Overview
 The current app shows an amusing, hopefully, toy-like view of the FGx Crossfeed data.
-There is, however, nothing stopping FGx Plane Spotter from becoming an extreme;y serious and useful on-line mapping and tracking app 
+There is, however, nothing stopping FGx Plane Spotter from becoming an extremely serious and useful on-line mapping and tracking app 
 - useful for FGx Crossfeed data and for any application that wants to display movements of a global nature.
 
 The wish list of possibilities has been started - and many more items can be added
@@ -34,12 +36,15 @@ The challenge is finding cool ways of automating the processes and procedures.
 
 
 ### 1. FGx Terrain
-The proposed work is described in detail here: [Jaanga unFlatland Read Me]( http://jaanga.github.io/cookbook/un-flatland/index.html#terrain ).
+The proposed work is described in detail here: 
+
+* [Fgx Terrain]( https://github.com/fgx/fgx-terrain/ )  
+* [Jaanga Terrain Read Me]( http://jaanga.github.io/terrain/index.html ).
 
 The FGx crew should decide whether or not FGx wishes to take on the terrain elevation bitmap project and create and maintain the repository and its data.
 
 ### 2. FGx Aircraft
-The proposed work is described in detail here: [FGx Aircraft]( https://github.com/fgx/fgx-aircraft/index.html#roadMap )
+The proposed work is described in detail here: [FGx Aircraft]( http://fgx.github.io/fgx-aircraft/index.html#roadMap )
 
 The FGx crew should decide whether or not FGx wishes to take on the aircraft repository (and browser/viewers) projects and create and maintain the repositories and their data.
 
@@ -53,10 +58,10 @@ The FGx crew should decide whether or not to bring in Geoff's and maintain it as
 
 ### Repository Tiles
 The titles of the above-mentioned three repositories are suggestions only.
-But the idea should so that a first time visitor to the FGx site has a fairly clear picture of what they are likely to find in a repository._
+But the idea should be that a first time visitor to the FGx site has a fairly clear picture of what they are likely to find in a repository._
 
 ### Specific Item Wish List
-See also Road Map for the generic underlying mapping app: [unFlatLand]( https://github.com/jaanga/cookbook/tree/gh-pages/un-flatland/index.html#tib )
+See also Road Map for the generic underlying mapping app: [Jaanga Terrain Viewer]( http://jaanga.github.io/terrain-viewer )
 
 * Access to full list of 27K+ ICAO locations
 * ICAO Airports display runways and ILS geometry
@@ -71,18 +76,27 @@ See also Road Map for the generic underlying mapping app: [unFlatLand]( https://
 
 ## Issues /Bugs
 
-* Jerky 'myplane' with incorrect heading
+* <s>Jerky 'myplane' with incorrect heading</s>
 
 ## Project Links
 
-You have two ways of viewing the FGx Plane Spotter files:
+Given the currennt CORS issues, you now have four ways of viewing the FGx Plane Spotter files:
 
-* Code hosted on GitHub: [fgx.github.io]( http://fgx.github.io/fgx-plane-spotter/ "view the files as apps." ) <input value="<< You are now probably here." size=28 style="font:bold 12pt monospace;border-width:0;" >  
-* Source code on GitHub: [github.com/fgx]( https://github.com/fgx/fgx-fgx-plane-spotter/ "View the files as source code." ) <scan style=display:none ><< You are now probably here.</scan>
+* Code hosted on GitHub: [fgx.github.io]( http://jaanga.github.io/fgx-plane-spotter/ "view the files as apps." ) <input value="<< You are now probably here." size=28 style="font:bold 12pt monospace;border-width:0;" >  
+* Source code on GitHub: [github.com/fgx]( https://github.com/jaanga/fgx-plane-spotter/ "View the files as source code." ) <scan style=display:none ><< You are now probably here.</scan>
+
+or 
+
+* Code hosted on GitHub: [fgx.github.io]( http://fgx.github.io/fgx-plane-spotter/ "view the files as apps." )    
+* Source code on GitHub: [github.com/fgx]( https://github.com/fgx/fgx-plane-spotter/ "View the files as source code." )  
 
 FGx home page: [fgx.ch]( http://www.fgx.ch )
 
-For a refeence as to the name of this repository see also [Aircraft Spotting]( http://en.wikipedia.org/wiki/Aircraft_spotting )
+For a reference as to the name of this repository see also [Aircraft Spotting]( http://en.wikipedia.org/wiki/Aircraft_spotting )
+
+
+
+
 
 ## Copyright Notice and License
 
@@ -95,8 +109,9 @@ This app is at an early and volatile stage. Not all licensing requirements may h
 
 2014-02-10 ~ Theo
 
-* r2 committed
+* r2 committed ~ 90 meter resoution. ILS and runways for 2136 airports
 * In the jaanga project until CORS/forking strategy is worked out
+* Many read me file updates
 
 
 2013-12-20 ~ Theo

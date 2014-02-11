@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang=en>
 <head>
-<title>FGx Plane Spotter r2.1</title>
+<title>FGx Plane Spotter r2</title>
 <meta charset=utf-8>
 </head>
 <body>
@@ -87,7 +87,7 @@
 		info = document.body.appendChild( document.createElement( 'div' ) );
 		info.style.cssText = ' background-color: #ccc; left: 20px; opacity:0.8; padding: 10px; position: absolute; top: 20px;';
 		info.innerHTML =  '<div onclick=info.style.display="none";stats.domElement.style.display="none"; >[x]</div>' +
-			'<h1><a href="" >FGx Plane Spotter<br>r2.1</a> ' +
+			'<h1><a href="" >FGx Plane Spotter<br>r2</a> ' +
 			'<a href=# title="Get help and info" onclick=help.style.display="block"; ><large>&#x24D8;</large></a></h1>' +
 			'<div id=help onclick=help.style.display="none";></div>' +
 			'<div>' +
@@ -118,13 +118,13 @@
 		help.style.cssText = 'display: none; background-color: #ccc; left: 350px; opacity:0.9; padding: 20px; ' +
 			'position: absolute; top: 50px; width: 500px; ';
 		help.innerHTML =  '<div onclick=help.style.display="none"; >' +
-				'<b>FGx Plane Spotter r2.1</b><br><br>' +
+				'<b>FGx Plane Spotter r2</b><br><br>' +
 				'<p>View any location on earth in 3D at 90 meter resolution.</p>' +
 
 				'<p>The main issue is the app only reads one 3D data tile at a time. ' +
 				'When you get an edge of a data tile, the map is otally flat</p>' +
 
-				'<p>And when yuou zoom in, as the English say, mind the gaps...</p>' +
+				'<p>And, as the English say, mind the gaps...</p>' +
 
 				'<p>Trackball General Controls:<br>' +
 					'&bull; Rotate globe: Left mouse / press 1 finger<br>' +
@@ -283,6 +283,7 @@
 				xDir = 'terrain-de3-96-127/';
 			}
 			heightMap.src =  '../../' + xDir + xHeightMapTile + '/' + yHeightMapTile +'.png';
+			//heightMap.src =  'http://jaanga.github.io/' + xDir + xHeightMapTile + '/' + yHeightMapTile +'.png';
 			
 			if ( heightMap.src !== prev ) {
 				heightMap.onload = initCanvas;
@@ -322,8 +323,8 @@
 
 	function updateVertices( xTile, yTile, xPos, yPos ) {
 		var zoomScale = pow( 2, zoom - 7);
-		var xLength = heightMap.width / zoomScale;
-		var yLength = heightMap.height / zoomScale;
+		xLength = heightMap.width / zoomScale;
+		yLength = heightMap.height / zoomScale;
 
 		xHeightMapTileZoom = zoomScale * xHeightMapTile;
 		yHeightMapTileZoom = zoomScale * yHeightMapTile;
@@ -332,10 +333,15 @@
 		var yDelta = yTile - yHeightMapTileZoom;
 		var xStart = xDelta * xLength;
 		var yStart = yDelta * yLength;
+// console.log( xStart, heightMap.width, yStart, heightMap.height );
+
+// if 	( ( xStart > heightMap.width ) || ( yStart > heightMap.height ) ) console.log( xStart, heightMap.width, yStart, heightMap.height );
 
 		context.drawImage( heightMap, xStart - 2, yStart - 2, xLength + 2, yLength + 2, 0, 0, vertsPerTile, vertsPerTile);
 
-		var imgd = context.getImageData( 0, 0, vertsPerTile, vertsPerTile ).data;
+		var image = context.getImageData( 0, 0, vertsPerTile, vertsPerTile );
+
+		imgd = image.data;
  
 		var geometry = new THREE.PlaneGeometry( 256, 256, vertsPerTile - 1, vertsPerTile - 1);
 		geometry.applyMatrix( new THREE.Matrix4().makeRotationX( -0.5 * pi ) );
@@ -356,6 +362,7 @@
 
 		var verts = geometry.vertices;
 		scl = 0.035 * scaleVert * ( zoom + 1);
+
 
 		if 	( ( xStart < heightMap.width ) && ( yStart < heightMap.height ) )  {
 				for (var i = 0, j = 0, len = imgd.length; i < len; i += 4) {
@@ -412,6 +419,13 @@
 		}
 	}
 
+	function animate() {
+		requestAnimationFrame( animate );
+		controls.update();
+		renderer.render( scene, camera );
+		stats.update();
+	}
+
 	function getTile( direction ) {
 		var max = pow( 2, zoom) - 1;
 		var jump = tilesPerSide / 2;
@@ -449,18 +463,15 @@
 
 		var place, mesh, x, y, z;
 
-		var ulLon = tile2lon( xTile -2, zoom );
-		var lrLon = tile2lon( xTile + tilesPerSide - 2, zoom );
-		var deltaLons = Math.abs( ulLon - lrLon );
-
+		var ulLng = tile2lon( xTile -2, zoom );
+		var lrLng = tile2lon( xTile + tilesPerSide - 2, zoom );
+		var deltaLngs = Math.abs( ulLng - lrLng );
 
 		var ulLat = tile2lat( yTile - 2, zoom );
 		var lrLat = tile2lat( yTile + tilesPerSide - 2, zoom );
 		var deltaLats = Math.abs( ulLat - lrLat );
 
-console.log( ulLat, lrLat, deltaLats );
-console.log( 256 * tilesPerSide / deltaLats, deltaLats );
-
+// console.log( ulLng, lrLng, deltaLngs, ' start', xStart, ' len', xLength );
 
 		contextTest.drawImage( heightMap, 0, 0, heightMap.width , heightMap.height, 0, 0, canvasTest.width , canvasTest.height);
 
@@ -472,8 +483,6 @@ console.log( 256 * tilesPerSide / deltaLats, deltaLats );
 		var lrLatHM = tile2lat( yHeightMapTile + 1, 7);
 		var deltaLatHM = Math.abs( tile2lat( yHeightMapTile, 7 ) - tile2lat( yHeightMapTile + 1, 7 ));
 
-
-
 		geometry = new THREE.CubeGeometry( 5, 1, 5 );
 		
 
@@ -481,11 +490,11 @@ console.log( 256 * tilesPerSide / deltaLats, deltaLats );
 		for ( var i = 0, iLen = gazetteer.length; i < iLen; i++ ) {
 			place = gazetteer[i];
 
-			if ( place[2] < ulLat && place[2] > lrLat && place[3] > ulLon && place[3] < lrLon ) {
+			if ( place[2] < ulLat && place[2] > lrLat && place[3] > ulLng && place[3] < lrLng ) {
 				if ( ( zoom > 10 ) || ( (zoom > 7) && (place[5] > 0) )  || ( place[5] > 3 ) ) {
-					xStart = canvasTest.width * Math.abs( ulLonHM - ulLon ) /  deltaLonHM;
+					xStart = canvasTest.width * Math.abs( ulLonHM - ulLng ) /  deltaLonHM;
 					yStart = canvasTest.height * Math.abs( ulLatHM - ulLat ) /  deltaLatHM;
-					xEnd = canvasTest.width * Math.abs( ulLon - lrLon ) /  deltaLonHM;
+					xEnd = canvasTest.width * Math.abs( ulLng - lrLng ) /  deltaLonHM;
 					yEnd = canvasTest.height * Math.abs( ulLat - lrLat ) /  deltaLonHM;
 
 					contextTest.lineWidth = 1 ;
@@ -504,7 +513,7 @@ console.log( 256 * tilesPerSide / deltaLats, deltaLats );
 					//contextTest.fillText(  ( place[0] + ' - altitude: ' + (spot[0] - 1.5 ) * 20), xStart + 15, yStart + 5 );
 //console.log( place[0], spot);
 
-					x = 256 * tilesPerSide * ( place[3] - lrLon  ) / deltaLons;
+					x = 256 * tilesPerSide * ( place[3] - lrLng  ) / deltaLngs;
 					z = 256 * tilesPerSide * ( ulLat - place[2] ) / deltaLats;
 					y = ( 5 * spot[0] );
 					geometry = new THREE.CubeGeometry( 5, 1, 5 );
@@ -527,9 +536,9 @@ console.log( 256 * tilesPerSide / deltaLats, deltaLats );
 					for (var j = 0, len = data.runways.length; j < len; j++) {
 						run = data.runways[j];
 
-						xStart = 256 * tilesPerSide * ( run.lon1- lrLon ) / deltaLons;
+						xStart = 256 * tilesPerSide * ( run.lon1- lrLng ) / deltaLngs;
 						zStart = 256 * tilesPerSide * ( ulLat - run.lat1 ) / deltaLats;
-						xEnd = 256 * tilesPerSide * ( run.lon2- lrLon ) / deltaLons;
+						xEnd = 256 * tilesPerSide * ( run.lon2- lrLng ) / deltaLngs;
 						zEnd = 256 * tilesPerSide * ( ulLat - run.lat2 ) / deltaLats;
 
 						vStart = v( xStart, y, zStart );
@@ -540,8 +549,8 @@ console.log( 256 * tilesPerSide / deltaLats, deltaLats );
 						mesh = new THREE.Mesh( geometry, material );
 						mesh.position.set(  xStart + 1536, y, zStart - 512 );
 						mesh.rotation.y = ( run.hdg) * -d2r;
-// mesh.lookAt( vStart );
 
+						// mesh.lookAt( vStart );
 						mesh.translateZ( -0.5 * length );
 						diagrams.add( mesh );
 
@@ -549,30 +558,33 @@ console.log( 256 * tilesPerSide / deltaLats, deltaLats );
 					material = new THREE.MeshBasicMaterial( { color: 0xff0000, opacity: 0.5, side: THREE.DoubleSide, transparent: true });
 					for (var j = 0, len = data.ils.length; j < len; j++) {
 						ils = data.ils[j];
-// console.log( ils );
-						if ( ils.type === 'ILS' ) {
-							xStart = 256 * tilesPerSide * ( ils.lon- lrLon ) / deltaLons;
+//	console.log( ils );
+						if ( ils.hdg) {
+							xStart = 256 * tilesPerSide * ( ils.lon- lrLng ) / deltaLngs;
 							zStart = 256 * tilesPerSide * ( ulLat - ils.lat ) / deltaLats;
 
-							length = 0.25 * 256 * tilesPerSide / deltaLats * ils.rng_nm / 57.2957795;
+							length = 256 * tilesPerSide / deltaLats * ils.rng_nm / 57.2957795;
 // geometry = new THREE.CylinderGeometry( radiusTop, radiusBottom, height, radiusSegments, heightSegments, openEnded )
 							geometry = new THREE.CylinderGeometry( 30, 3, length, 20, 1, 1 );
 							geometry.applyMatrix( new THREE.Matrix4().makeTranslation( 0, 0.5 * length, 0) );
-							geometry.applyMatrix( new THREE.Matrix4().makeRotationX( 1.45 ) );
+							geometry.applyMatrix( new THREE.Matrix4().makeRotationX( -1.3 ) );
 
+							
 							mesh = new THREE.Mesh( geometry, material );
-							mesh.position.set(  xStart + 1536, y, zStart - 512 );
+							mesh.position.set(  xStart + 1536, y + 10, zStart - 512 );
 							mesh.rotation.y = ( ils.hdg) * -d2r;
 							// mesh.lookAt( vStart );
 							// mesh.translateZ( -0.5 * length );
 							diagrams.add( mesh );
 						}
+
 					}
 				}
 			}
 		}
 	}
 
+// please add calculate the text width
 	function canvasText( text ) {
 		var canvas = document.createElement( 'canvas' );
 
@@ -602,6 +614,27 @@ console.log( 256 * tilesPerSide / deltaLats, deltaLats );
 			lon2tile( parseFloat( lon), 7 ) + '#' + lat2tile( parseFloat(lat), 7 );
 	}
 
+	function requestFile( fname ) {
+		var xmlHttp = new XMLHttpRequest();
+		xmlHttp.crossOrigin = "Anonymous"; 
+		xmlHttp.open( 'GET', fname, false );
+		xmlHttp.send( null );
+		return xmlHttp.responseText;
+	}
+
+	function cos( a ){ return Math.cos( a ); }
+	function sin( a ){ return Math.sin( a ); }
+	function pow( a, b ){ return Math.pow( a, b ); }
+	function v( x, y, z ){ return new THREE.Vector3( x, y, z ); }
+
+	Array.max = function( array ){
+		return Math.max.apply( Math, array );
+	};
+	 
+	Array.min = function( array ){
+		return Math.min.apply( Math, array );
+	};
+
 // http://wiki.openstreetmap.org/wiki/Slippy_map_tilenames#Tile_servers
 	function lon2tile( lon, zoom ) {
 		return Math.floor( ( lon + 180 ) / 360 * pow( 2, zoom ) );
@@ -618,29 +651,6 @@ console.log( 256 * tilesPerSide / deltaLats, deltaLats );
 	function tile2lat( y, z ) {
 		var n = pi - 2 * pi * y / pow( 2, z );
 		return 180 / pi * Math.atan( 0.5 * ( Math.exp( n ) - Math.exp( -n ) ));
-	}
-
-	function requestFile( fname ) {
-		var xmlHttp = new XMLHttpRequest();
-		xmlHttp.crossOrigin = "Anonymous"; 
-		xmlHttp.open( 'GET', fname, false );
-		xmlHttp.send( null );
-		return xmlHttp.responseText;
-	}
-
-	function cos( a ){ return Math.cos( a ); }
-	function sin( a ){ return Math.sin( a ); }
-	function pow( a, b ){ return Math.pow( a, b ); }
-	function v( x, y, z ){ return new THREE.Vector3( x, y, z ); }
-
-	Array.max = function( array ){ return Math.max.apply( Math, array ); };
-	Array.min = function( array ){ return Math.min.apply( Math, array ); };
-
-	function animate() {
-		requestAnimationFrame( animate );
-		controls.update();
-		renderer.render( scene, camera );
-		stats.update();
 	}
 </script>
 </body>

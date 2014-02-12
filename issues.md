@@ -1,6 +1,11 @@
 FGx Plane Spotter Issues & Updates
 ==================================
 
+2014-02-11 ~ Theo
+Sometimes the ILS cones point downwards!?!
+Lots of issues with diagrams and going to zoom level 7 and below
+
+
 2014-02-10 ~ FGx Plane Spotter r2 ~ Theo
 
 FGx Plane Spotter is an app built upon a viewer [unFlatland]( http://jaanga.github.io/terrain-viewer/un-flatland/index.html ) which reads data from 
@@ -18,7 +23,7 @@ Issues pertaining to Plane Spotter r2 Beta include the following:
 * How to calculate the radius of the base of the ILS cone?
 * How to calculate accurately the correct scale for nautical miles - so as to provide a correct length for the ILS beam?
 * Ditto the scale of meters so as to provide a correct width of the runways?
-* Continuing to improve the accuracy of positioning elents - particularly their elevation
+* Continuing to improve the accuracy of positioning elements - particularly their elevation
 
 Coming in the upcoming betas:
 

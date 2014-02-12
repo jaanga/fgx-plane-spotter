@@ -107,12 +107,22 @@ This app is at an early and volatile stage. Not all licensing requirements may h
 
 ## Change Log
 
+2014-02-11 ~ The
+
+* r2.1
+* ILS points in correct direction, angle adjusted
+* only show ils.type = ils
+* Correct length of ILS cone displaye
+* Areas not in 3D have reduced opacity, text message dsplayed
+* Permalinks start to work
+* Many of the navaids in
+
 2014-02-10 ~ Theo
 
 * r2 committed ~ 90 meter resoution. ILS and runways for 2136 airports
 * In the jaanga project until CORS/forking strategy is worked out
 * Many read me file updates
-
+* Length of ILS beam may now be correct
 
 2013-12-20 ~ Theo
 

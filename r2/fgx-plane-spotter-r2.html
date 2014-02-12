@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang=en>
 <head>
-<title>FGx Plane Spotter r2.1</title>
+<title>FGx Plane Spotter r2.2</title>
 <meta charset=utf-8>
 </head>
 <body>
@@ -54,8 +54,18 @@
 	var canvas, context;
 	var vertsPerTile = 32;
 	var tilesPerSide = 8;
+
+	var ulLat, ulLon, lrLat, lrLon, deltaLats, deltaLons;
+	var xScale, zScale;
+
 	var pi = Math.PI, pi05 = pi * 0.5;
 	var d2r = pi / 180, r2d = 180 / pi;  // degress / radians
+
+	var clock = new THREE.Clock();
+	var tim = 0;
+
+	var aircraft;
+	var seymour;
 
 	init();
 	animate();
@@ -104,7 +114,7 @@
 		info = document.body.appendChild( document.createElement( 'div' ) );
 		info.style.cssText = ' background-color: #ccc; left: 20px; opacity:0.8; padding: 10px; position: absolute; top: 20px;';
 		info.innerHTML =  '<div onclick=info.style.display="none";stats.domElement.style.display="none"; >[x]</div>' +
-			'<h1><a href="" >FGx Plane Spotter<br>r2.1</a> ' +
+			'<h1><a href="" >FGx Plane Spotter<br>r2.2</a> ' +
 			'<a href=# title="Get help and info" onclick=help.style.display="block"; ><large>&#x24D8;</large></a></h1>' +
 			'<div id=help onclick=help.style.display="none";></div>' +
 			'<div>' +
@@ -136,7 +146,7 @@
 		help.style.cssText = 'display: none; background-color: #ccc; left: 350px; opacity:0.9; padding: 20px; ' +
 			'position: absolute; top: 50px; width: 500px; ';
 		help.innerHTML =  '<div onclick=help.style.display="none"; >' +
-				'<b>FGx Plane Spotter r2.1</b><br><br>' +
+				'<b>FGx Plane Spotter r2.2</b><br><br>' +
 				'<p>View any location on earth in 3D at 90 meter resolution.</p>' +
 
 				'<p>The main issue is the app only reads one 3D data tile at a time. ' +
@@ -234,6 +244,14 @@
 		contextTest.fillRect(0, 0, 255, 255 );
 
 		setLocation();
+
+		var loader = new THREE.JSONLoader();
+		
+		loader.load( '../data/seymour.js', function( geometry ) { 
+			geometry.applyMatrix( new THREE.Matrix4().makeRotationY( pi ) );
+			geometry.applyMatrix( new THREE.Matrix4().multiplyScalar( 3 ) );
+			seymour = geometry;
+		} );
 	}
 
 	function setLocation() {
@@ -266,6 +284,18 @@
 
 		txt += 'xTile ' + xTile + br;
 		txt += 'yTile ' + yTile + br;
+
+		ulLon = tile2lon( xTile -2, zoom );
+		lrLon = tile2lon( xTile + tilesPerSide - 2, zoom );
+		deltaLons = Math.abs( ulLon - lrLon );
+
+
+		ulLat = tile2lat( yTile - 2, zoom );
+		lrLat = tile2lat( yTile + tilesPerSide - 2, zoom );
+		deltaLats = Math.abs( ulLat - lrLat );
+
+		xScale = 256 * tilesPerSide / deltaLons;
+		zScale = 256 * tilesPerSide / deltaLats;
 
 		var prev = heightMap.src;
 
@@ -409,7 +439,7 @@
 		var imgd = context.getImageData( 0, 0, 256, 256 ).data;
 
 		geometry = new THREE.PlaneGeometry( tilesPerSide * 256, tilesPerSide * 256, 255, 255);
-		geometry.applyMatrix( new THREE.Matrix4().makeRotationX( -0.5 * Math.PI ) );
+		geometry.applyMatrix( new THREE.Matrix4().makeRotationX( -pi05 ) );
 		var verts = geometry.vertices;
 		scl = 0.025 * scaleVert * ( zoom + 3);
 
@@ -466,6 +496,8 @@
 		setLocation();
 	}
 
+
+ 
 	function updatediagrams( ttt ) {
 
 		if ( diagrams && diagrams.children.length > 0) {
@@ -483,15 +515,6 @@
 		scene.add( diagrams );
 
 		var place, mesh, x, y, z;
-
-		var ulLon = tile2lon( xTile -2, zoom );
-		var lrLon = tile2lon( xTile + tilesPerSide - 2, zoom );
-		var deltaLons = Math.abs( ulLon - lrLon );
-
-
-		var ulLat = tile2lat( yTile - 2, zoom );
-		var lrLat = tile2lat( yTile + tilesPerSide - 2, zoom );
-		var deltaLats = Math.abs( ulLat - lrLat );
 
 // console.log( ulLat, lrLat, deltaLats );
 // http://wiki.openstreetmap.org/wiki/Slippy_map_tilenames#Tile_servers: resolution = 156543.034 meters/pixel * cos(latitude) / (2 ^ zoomlevel) 
@@ -516,8 +539,6 @@
 
 		var xStart, yStart, xEnd, yEnd, vStart, vEnd, run, ils, nav;
 
-		var xScale = 256 * tilesPerSide / deltaLons;
-		var zScale = 256 * tilesPerSide / deltaLats;
 		for ( var i = 0, iLen = ilsGazetteer.length; i < iLen; i++ ) {
 			place = ilsGazetteer[i];
 
@@ -546,7 +567,7 @@
 
 					x = xScale * ( place[3] - lrLon );
 					z = zScale * ( ulLat - place[2] );
-					y = 5 * spot[0];					
+					y = 5 * spot[0];
 					geometry = new THREE.CubeGeometry( 5, 1, 5 );
 					material = new THREE.MeshBasicMaterial( { color: 0x00ff00, opacity: 0.5, transparent: true });
 					mesh = new THREE.Mesh( geometry, material );
@@ -599,7 +620,7 @@
 								geometry = new THREE.CylinderGeometry( 30, 3, length, 20, 1, 1 );
 								geometry.applyMatrix( new THREE.Matrix4().makeTranslation( 0, 0.5 * length, 0) );
 								geometry.applyMatrix( new THREE.Matrix4().makeRotationX( 1.45 ) );  // what is the correct angle?
-								material = new THREE.MeshBasicMaterial( { color: 0xff0000, opacity: 0.5, side: THREE.DoubleSide, transparent: true });
+								material = new THREE.MeshBasicMaterial( { color: 0xff0000, opacity: 0.25, side: THREE.DoubleSide, transparent: true });
 								mesh = new THREE.Mesh( geometry, material );
 								mesh.position.set(  xStart + 1536, y, zStart - 512 );  // needs a formula...
 								mesh.rotation.y = ( ils.hdg) * -d2r;
@@ -676,6 +697,39 @@
 		return texture;
 	}
 
+	function getCrossfeed() {
+		crossfeed = JSON.parse( requestFile( 'http://crossfeed.fgx.ch/flights.json' ) ); 
+		if ( aircraft && aircraft.children.length > 0) { 
+			scene.remove( aircraft );
+			aircraft.children.length = 0;
+		}	
+
+		aircraft = new THREE.Object3D;
+		scene.add( aircraft );
+		var f, mesh, x, y, z;
+		material = new THREE.MeshNormalMaterial();
+
+		for ( var i = 0, iLen = crossfeed.flights.length; i < iLen; i++ ) {
+			f = crossfeed.flights[i];
+			if ( f.lat < ulLat && f.lat > lrLat && f.lon > ulLon  && f.lon < lrLon ) {
+				mesh = new THREE.Mesh( seymour, material );
+				x = xScale * ( f.lon - lrLon );
+				z = zScale * ( ulLat - f.lat);
+				y = 15 + 0.5 * f.alt_ft;
+				mesh.position.set( x + 1536, y, z - 512);
+				mesh.rotation.y = f.hdg * d2r;
+				aircraft.add( mesh );
+// console.log( f.alt_ft , y )
+				var texture = canvasText ( f.alt_ft,f.callsign, f.model.split('/')[1] );
+				var spriteMaterial = new THREE.SpriteMaterial( { map: texture, useScreenCoordinates: false, opacity: 1 } );
+				sprite = new THREE.Sprite( spriteMaterial );
+				sprite.position.set( x + 1536, y + 30, z - 512);
+				sprite.scale.set( 100, 30, 1 );
+				aircraft.add( sprite );
+			}
+		}
+	}
+
 	function link() {
 		window.location.hash = '#' + zoom + '#' + ilsStartPlace + '#' + displayDiagrams + '#' + scaleVert + '#' + mapType;
 	}
@@ -721,10 +775,18 @@
 
 	function animate() {
 		requestAnimationFrame( animate );
+		var delta = clock.getDelta()
 		controls.update();
 		renderer.render( scene, camera );
 		stats.update();
+
+		tim += delta;
+		if ( tim > 3 ) {
+			getCrossfeed();
+			tim = 0;
+		}
 	}
+
 </script>
 </body>
 </html>

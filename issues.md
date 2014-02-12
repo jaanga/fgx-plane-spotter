@@ -2,6 +2,7 @@ FGx Plane Spotter Issues & Updates
 ==================================
 
 2014-02-11 ~ Theo
+Planes: issues with plane altitudes and headings. Planes re probably heading magnetic and so far the app is true only.
 Sometimes the ILS cones point downwards!?!
 Lots of issues with diagrams and going to zoom level 7 and below
 

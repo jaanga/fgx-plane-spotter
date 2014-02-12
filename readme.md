@@ -109,6 +109,9 @@ This app is at an early and volatile stage. Not all licensing requirements may h
 
 2014-02-11 ~ The
 
+* r2.2
+* There are aircraft in the air. Many issues.
+
 * r2.1
 * ILS points in correct direction, angle adjusted
 * only show ils.type = ils

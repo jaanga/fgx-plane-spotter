@@ -1,7 +1,7 @@
 FGx Plane Spotter Read Me
 ====================================================================================
 
-Live demo: [FGx Plane Spotter r2]( http://jaanga.github.io/fgx-plane-spotter/r2/fgx-plane-spotter-r2.html "Happy spotting!")
+Live demo: [FGx Plane Spotter r2.2]( http://jaanga.github.io/fgx-plane-spotter/r2/fgx-plane-spotter-r2.html "Happy spotting!")
 
 Live demo: [FGx Plane Spotter r1]( http://jaanga.github.io/fgx-plane-spotter/r1/index.html "Happy spotting!")
 
@@ -15,7 +15,8 @@ View live [FGx Crossfeed]( http://crossfeed.fgx.ch/data ) data - showing current
 
 ## Features
 * Shows FGx Crossfeed aircraft in 3D
-* First person controller displays selected aircraft in front of camera
+* Displays much data inclusing ILS cones for 2,136 airports and some data for over 27K ICAO listings 
+* Not right now: First person controller displays selected aircraft in front of camera
 * Places dropdown lists the airports. 
 * See also the features of [Jaanga unFlatland]( http://jaanga.github.io/terrain-viewer/un-flatland/ ).
 	- FGx Plane Spotter is an app built on top of unFlatland which is a viewer of 3D [Jaanga Terrain]( http://jaanga.github.io/terrain/ ) data.
@@ -82,8 +83,8 @@ See also Road Map for the generic underlying mapping app: [Jaanga Terrain Viewer
 
 Given the currennt CORS issues, you now have four ways of viewing the FGx Plane Spotter files:
 
-* Code hosted on GitHub: [fgx.github.io]( http://jaanga.github.io/fgx-plane-spotter/ "view the files as apps." ) <input value="<< You are now probably here." size=28 style="font:bold 12pt monospace;border-width:0;" >  
-* Source code on GitHub: [github.com/fgx]( https://github.com/jaanga/fgx-plane-spotter/ "View the files as source code." ) <scan style=display:none ><< You are now probably here.</scan>
+* Code hosted on GitHub: [jaanga.github.io]( http://jaanga.github.io/fgx-plane-spotter/ "view the files as apps." ) <input value="<< You are now probably here." size=28 style="font:bold 12pt monospace;border-width:0;" >  
+* Source code on GitHub: [github.com/jaanga]( https://github.com/jaanga/fgx-plane-spotter/ "View the files as source code." ) <scan style=display:none ><< You are now probably here.</scan>
 
 or 
 
@@ -93,8 +94,6 @@ or
 FGx home page: [fgx.ch]( http://www.fgx.ch )
 
 For a reference as to the name of this repository see also [Aircraft Spotting]( http://en.wikipedia.org/wiki/Aircraft_spotting )
-
-
 
 
 

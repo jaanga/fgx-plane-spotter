@@ -7,7 +7,7 @@
 
 
 <p id=is >
-	<a href=JavaScript:displayPage("issues.md",is); >Issues</a>
+	<a href=JavaScript:displayPage("issues.md",is); >Current Issues</a>
 </p>
 
 

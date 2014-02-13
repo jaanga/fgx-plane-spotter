@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang=en>
 <head>
-<title>FGx Plane Spotter r2.3</title>
+<title>FGx Plane Spotter r2.2</title>
 <meta charset=utf-8>
 </head>
 <body>
@@ -11,8 +11,6 @@
 <script src =http://mrdoob.github.io/three.js/examples/js/libs/stats.min.js ></script>
 <script>
 // Airports to look at: EGLL KATL KJFK KSFO LFPG EGLL 
-
-	var rev = '2.3';
 	var zoom = 13;
 	var scaleVert = zoom - 3;
 
@@ -43,7 +41,7 @@
 		['Wireframe','']
 	];
 
-	var info, crossfeed, crossfeedDiv, crossfeedText;
+	var info;
 	var lat, lon;
 	var xTile, yTile;
 	var xDelta, yDelta;
@@ -69,20 +67,13 @@
 	var aircraft;
 	var seymour;
 
-	var offsetX;
-	var offsetY;
-
 	init();
 	animate();
 
 	function init() {
 		var css = document.body.appendChild( document.createElement('style') );
 		css.innerHTML = 'body { font: 600 12pt monospace; margin: 0; overflow: hidden; }' +
-			'h1 { margin: 0; }' +
 			'h1 a {text-decoration: none; }' +
-			'td {font: 400 10pt monospace; }' +
-		'#closer { position: absolute; right: 5px; top: 5px; }' +
-		'#movable { overflow: scroll; margin: 20px; padding: 30px 20px; position: absolute; resize: both; }' +
 		'';
 
 		var data = requestFile( icaoFileName );
@@ -121,12 +112,9 @@
 		yTile = (lat2tile( lat, 7 ));
 
 		info = document.body.appendChild( document.createElement( 'div' ) );
-		info.id = 'movable';
-		info.style.cssText = ' background-color: #ccc; left: 20px; opacity:0.8; top: 20px;';
-		info.addEventListener( 'mousedown', mouseMove, false );
-		info.innerHTML =  
-			'<div id=closer onclick=info.style.display="none";stats.domElement.style.display="none"; >[x]</div>' +
-			'<h1><a href="" >FGx Plane Spotter<br>' + rev + '</a> ' +
+		info.style.cssText = ' background-color: #ccc; left: 20px; opacity:0.8; padding: 10px; position: absolute; top: 20px;';
+		info.innerHTML =  '<div onclick=info.style.display="none";stats.domElement.style.display="none"; >[x]</div>' +
+			'<h1><a href="" >FGx Plane Spotter<br>r2.2</a> ' +
 			'<a href=# title="Get help and info" onclick=help.style.display="block"; ><large>&#x24D8;</large></a></h1>' +
 			'<div id=help onclick=help.style.display="none";></div>' +
 			'<div>' +
@@ -158,7 +146,7 @@
 		help.style.cssText = 'display: none; background-color: #ccc; left: 350px; opacity:0.9; padding: 20px; ' +
 			'position: absolute; top: 50px; width: 500px; ';
 		help.innerHTML =  '<div onclick=help.style.display="none"; >' +
-				'<b>FGx Plane Spotter ' + rev + '</b><br><br>' +
+				'<b>FGx Plane Spotter r2.2</b><br><br>' +
 				'<p>View any location on earth in 3D at 90 meter resolution.</p>' +
 
 				'<p>The main issue is the app only reads one 3D data tile at a time. ' +
@@ -188,15 +176,13 @@
 				'copyright &copy; 2014 jaanga authors ~ MIT license</small><br><br>' +
 				'<i>Click anywhere in this message to hide...</i>' +
 		'</div>';
-
-		crossfeedDiv = document.body.appendChild( document.createElement( 'div' ) );
-		crossfeedDiv.id = 'movable';
-		crossfeedDiv.style.cssText = ' background-color: #ccc; height: 300px; left: ' + (window.innerWidth - 400) + 'px; opacity: 0.8; top: 400px; width: 300px; ';
-		crossfeedDiv.addEventListener( 'mousedown', mouseMove, false );
-		crossfeedDiv.innerHTML = crossfeedText = 
-			'<div id=closer onclick=crossfeedDiv.style.display="none"; >[x]</div>' +
-			'<h1>FGx Crossfeed</h1>' +
-		'';
+/*
+		for ( var i = 0, len = gazetteer.length; i < len; i++ ) {
+			selPlace.appendChild( document.createElement( 'option' ) );
+			selPlace.children[i].text = gazetteer[i][0];
+		}
+		selPlace.selectedIndex = startPlace;
+*/
 
 		data = requestFile( ilsFileName );
 		lines = data.split(/\r\n|\n/);
@@ -239,8 +225,6 @@
 
 		THREE.ImageUtils.crossOrigin = 'anonymous';
 
-
-
 // axes
 		scene.add( new THREE.ArrowHelper( v(1, 0, 0), v(0, 0, 0), 50, 0xcc0000) );
 		scene.add( new THREE.ArrowHelper( v(0, 1, 0), v(0, 0, 0), 30, 0x00cc00) );
@@ -254,7 +238,7 @@
 
 		canvasTest = document.createElement( 'canvas' );
 		document.body.appendChild( canvasTest );
-		canvasTest.style.cssText = 'height: 256px; position: absolute; right: 100px; width: 256px;';
+		canvasTest.style.cssText = 'height: 256px; position: absolute; right: 0; width: 256px;';
 
 		contextTest = canvasTest.getContext( '2d' );
 		contextTest.fillRect(0, 0, 255, 255 );
@@ -268,15 +252,9 @@
 			geometry.applyMatrix( new THREE.Matrix4().multiplyScalar( 3 ) );
 			seymour = geometry;
 		} );
-
-		window.addEventListener('mouseup', mouseUp, false);
 	}
 
 	function setLocation() {
-
-		lat = parseFloat( lat );
-		lon = parseFloat( lon );
-
 		zoom = parseInt(zoom, 10);
 		scaleVert = parseInt(scaleVert, 10);
 		tilesPerSide = parseInt(tilesPerSide, 10);
@@ -289,6 +267,9 @@
 
 		var br = '<br>', br2 = '<br><br>';
 		var txt = '';
+
+		lat = parseFloat( lat );
+		lon = parseFloat( lon );
 
 		xTile = lon2tile( lon, zoom );
 		yTile = lat2tile( lat, zoom );
@@ -307,6 +288,7 @@
 		ulLon = tile2lon( xTile -2, zoom );
 		lrLon = tile2lon( xTile + tilesPerSide - 2, zoom );
 		deltaLons = Math.abs( ulLon - lrLon );
+
 
 		ulLat = tile2lat( yTile - 2, zoom );
 		lrLat = tile2lat( yTile + tilesPerSide - 2, zoom );
@@ -514,7 +496,10 @@
 		setLocation();
 	}
 
+
+ 
 	function updatediagrams( ttt ) {
+
 		if ( diagrams && diagrams.children.length > 0) {
 			scene.remove( diagrams );
 			diagrams.children.length = 0;
@@ -722,20 +707,19 @@
 		aircraft = new THREE.Object3D;
 		scene.add( aircraft );
 		var f, mesh, x, y, z;
-		var txt = '';
 		material = new THREE.MeshNormalMaterial();
-		
+
 		for ( var i = 0, iLen = crossfeed.flights.length; i < iLen; i++ ) {
 			f = crossfeed.flights[i];
 			if ( f.lat < ulLat && f.lat > lrLat && f.lon > ulLon  && f.lon < lrLon ) {
 				mesh = new THREE.Mesh( seymour, material );
 				x = xScale * ( f.lon - lrLon );
 				z = zScale * ( ulLat - f.lat);
-				y = ( f.alt_ft > 1000 ) ? 1000 : 15 + 0.5 * f.alt_ft;
+				y = 15 + 0.5 * f.alt_ft;
 				mesh.position.set( x + 1536, y, z - 512);
 				mesh.rotation.y = f.hdg * d2r;
 				aircraft.add( mesh );
-// console.log( y )
+// console.log( f.alt_ft , y )
 				var texture = canvasText ( f.alt_ft,f.callsign, f.model.split('/')[1] );
 				var spriteMaterial = new THREE.SpriteMaterial( { map: texture, useScreenCoordinates: false, opacity: 1 } );
 				sprite = new THREE.Sprite( spriteMaterial );
@@ -743,15 +727,7 @@
 				sprite.scale.set( 100, 30, 1 );
 				aircraft.add( sprite );
 			}
-			txt += '<tr>' +
-			'<td><a href=JavaScript:lat=' + f.lat +';lon=' + f.lon + ';setLocation(); >' + f.callsign + '</a></td><td>' +  f.model.split('/')[1] + '</td><td>' +
-			f.alt_ft + '</td><td>' + f.spd_kts + '</td><td>' + f.hdg + '</td><td>' +  f.lat  + '</td><td>' + f.lon  + '</td><td>' +  f.dist_nm + '</td>' +  
-			'</tr>';
 		}
-		crossfeedDiv.innerHTML = crossfeedText + '<table><tr><td colspan=7>' +  crossfeed.flights.length + ' aircraft online</td></tr>' +  
-			'<tr><td>callsign </td><td>model</td><td>altitide </td><td>speed</td><td>heading</td><td>lat</td><td>lon</td><td>distance</td></tr>' + 
-			txt +
-		'</table>';
 	}
 
 	function link() {
@@ -781,14 +757,6 @@
 		return 180 / pi * Math.atan( 0.5 * ( Math.exp( n ) - Math.exp( -n ) ));
 	}
 
-	function cos( a ){ return Math.cos( a ); }
-	function sin( a ){ return Math.sin( a ); }
-	function pow( a, b ){ return Math.pow( a, b ); }
-	function v( x, y, z ){ return new THREE.Vector3( x, y, z ); }
-
-	Array.max = function( array ){ return Math.max.apply( Math, array ); };
-	Array.min = function( array ){ return Math.min.apply( Math, array ); };
-
 	function requestFile( fname ) {
 		var xmlHttp = new XMLHttpRequest();
 		xmlHttp.crossOrigin = "Anonymous"; 
@@ -797,22 +765,13 @@
 		return xmlHttp.responseText;
 	}
 
-	function mouseUp() {
-		window.removeEventListener('mousemove', divMove, true);
-	}
+	function cos( a ){ return Math.cos( a ); }
+	function sin( a ){ return Math.sin( a ); }
+	function pow( a, b ){ return Math.pow( a, b ); }
+	function v( x, y, z ){ return new THREE.Vector3( x, y, z ); }
 
-	function mouseMove( event ){
-		if ( event.target.id === 'movable' ) {
-			offsetX = event.clientX - event.target.offsetLeft;
-			offsetY = event.clientY - event.target.offsetTop;
-			window.addEventListener('mousemove', divMove, true);
-		}
-	}
-
-	function divMove( event ){
-		event.target.style.left = ( event.clientX - offsetX ) + 'px';
-		event.target.style.top = ( event.clientY - offsetY ) + 'px';
-	}
+	Array.max = function( array ){ return Math.max.apply( Math, array ); };
+	Array.min = function( array ){ return Math.min.apply( Math, array ); };
 
 	function animate() {
 		requestAnimationFrame( animate );

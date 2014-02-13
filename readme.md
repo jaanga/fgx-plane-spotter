@@ -106,7 +106,13 @@ This app is at an early and volatile stage. Not all licensing requirements may h
 
 ## Change Log
 
-2014-02-11 ~ The
+2014-02-12 ~ Theo
+
+* r2.3
+* Added rev number variable
+* Status div now movable and resesizable;
+
+2014-02-11 ~ Theo
 
 * r2.2
 * There are aircraft in the air. Many issues.

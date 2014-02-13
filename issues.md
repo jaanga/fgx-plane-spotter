@@ -1,7 +1,14 @@
 FGx Plane Spotter Issues & Updates
 ==================================
 
-## 2014-02-11 ~ FGx Plane Spotter r2.2 Theo
+## 2014-02-12 ~ FGx Plane Spotter r2.2 ~ Theo
+
+A number of PNGs over the oceans are yet to exist...
+Draggable DIVs have issues being dragged
+There is no mechanism to follow an aircraft - apart from clicking on its lnk
+ 
+
+## 2014-02-11 ~ FGx Plane Spotter r2.2 ~ Theo
 
 Planes: issues with aircraft altitudes and headings. Planes are probably heading magnetic and so far the app is true only.
 Sometimes the ILS cones point downward!?!
@@ -10,7 +17,10 @@ Must work on better formula for controlling the scaling of the elevations.
 
 Coming up: more camera things and more flight status things
 
+* add permalinks to read me
+
 After that: 
+
 * What should a 3D diagram look like?
 * Probably need a function that takes lat/Lon, looks at heightmap and returns height.
 * Also need much better understanding of de Ferranti HGT files, GDAL etc.
@@ -56,7 +66,7 @@ Coming in the upcoming betas:
 * <s>Display of FGx Crossfeed aircraft</s>
 * <s>Permalinks for the airports</s>
 * First person camera
-* Div showing all the current craft in service
+* <s>Div showing all the current craft in service</s>
 * Camera on airport control tower
 * <s>Zoom level-dependent display of all 34K+ ICOA Objects</s>   
 

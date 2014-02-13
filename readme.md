@@ -106,6 +106,12 @@ This app is at an early and volatile stage. Not all licensing requirements may h
 
 ## Change Log
 
+2014-02-13 ~ Theo
+
+* r2.4
+* Fixed broken permalink maker
+* Added clear permalink button
+
 2014-02-12 ~ Theo
 
 * r2.3

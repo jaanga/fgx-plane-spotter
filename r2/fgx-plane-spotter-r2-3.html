@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang=en>
 <head>
-<title>FGx Plane Spotter r2.4</title>
+<title>FGx Plane Spotter r2.3</title>
 <meta charset=utf-8>
 </head>
 <body>
@@ -12,17 +12,8 @@
 <script>
 // Airports to look at: EGLL KATL KJFK KSFO LFPG EGLL 
 
-	var rev = '2.4';
+	var rev = '2.3';
 	var zoom = 13;
-	var icaoStartPlace =  13228;
-	var displayDiagrams = 0;
-	var vertsPerTile = 32;
-	var tilesPerSide = 8;
-	var lat
-	var lon;
-	var mapType = 3;
-
-
 	var scaleVert = zoom - 3;
 
 	var icaoFileName = '../data/apt1000-icao.csv';
@@ -33,7 +24,10 @@
 	var ilsGazetteer;
 
 	var ilsStartPlace =  1106; // San Francisco ~ but see below  //
+	var icaoStartPlace =  13228;
+	var displayDiagrams = false;
 
+	var mapType = 3;
 	var mapTypes = [
 		['Colorful',''],
 		['Google Maps','http://mt1.google.com/vt/x='],
@@ -50,18 +44,21 @@
 	];
 
 	var info, crossfeed, crossfeedDiv, crossfeedText;
-
+	var lat, lon;
 	var xTile, yTile;
 	var xDelta, yDelta;
 	var heightMap;
 	var terrain;
 	var diagrams;
-
-	var ulLat, ulLon, lrLat, lrLon, deltaLats, deltaLons;
-	var xScale, zScale;
+	var displayDiagrams = 0;
 
 	var renderer, scene, camera, controls, stats;
 	var canvas, context;
+	var vertsPerTile = 32;
+	var tilesPerSide = 8;
+
+	var ulLat, ulLon, lrLat, lrLon, deltaLats, deltaLons;
+	var xScale, zScale;
 
 	var pi = Math.PI, pi05 = pi * 0.5;
 	var d2r = pi / 180, r2d = 180 / pi;  // degress / radians
@@ -107,7 +104,7 @@
 		lat = 37.78; // gazetteer[ startPlace][2];
 		lon = -122.41; // gazetteer[ startPlace][3];
 
-		hashes = location.hash.split('#');
+		var hashes = location.hash.split('#');
 		zoom = ( hashes[1] !== undefined ) ? hashes[1] : zoom;
 		if ( hashes[2] !== undefined ) {
 			icaoStartPlace = icaoIndex.indexOf( hashes[2] );
@@ -150,8 +147,7 @@
 				'</select>' +
 
 				'<p><input id=chkdiagrams type="checkbox" onchange=updatediagrams(); >Diagrams</p>' +
-				'<a href=JavaScript:parmalink(); >permalink</a> ' +
-				'<a href=JavaScript:clearPermalink(); >clear permalink</a> &nbsp;' +
+				'<a href=JavaScript:link(); >permalink</a> &nbsp;' +
 				'<a href=JavaScript:viewPNG(); >View PNG</a><hr>' +
 
 			'</div>' +
@@ -758,12 +754,8 @@
 		'</table>';
 	}
 
-	function permalink() {
-		window.location.hash = '#' + zoom + '#' + ilsGazetteer[ selPlace.selectedIndex ][0] + '#' + displayDiagrams + '#' + scaleVert + '#' + mapType;
-	}
-
-	function clearPermalink() {
-		window.history.pushState( '', '', window.location.pathname);
+	function link() {
+		window.location.hash = '#' + zoom + '#' + ilsStartPlace + '#' + displayDiagrams + '#' + scaleVert + '#' + mapType;
 	}
 
 	function viewPNG() {

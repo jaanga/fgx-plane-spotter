@@ -524,8 +524,7 @@
 //		var resolution = 156543.034 * cos( ulLat) / pow( 2, zoom );
 //		var mPerTile = 40075016.686 * cos( ulLat) / pow( 2, zoom );
 //		var nmPerTile = 21638.777908207343 * cos( ulLat) / pow( 2, zoom );
-		var unitsPerNM = 256 * pow( 2, zoom ) / ( 21638.777908207343 * cos( ulLat * d2r) );
-console.log( unitsPerNM, cos( ulLat), ulLat );  
+		var unitsPerNM = 256 * pow( 2, zoom ) / ( 21638.777908207343 * cos( ulLat * d2r) );  
 
 		contextTest.drawImage( heightMap, 0, 0, heightMap.width , heightMap.height, 0, 0, canvasTest.width , canvasTest.height);
 

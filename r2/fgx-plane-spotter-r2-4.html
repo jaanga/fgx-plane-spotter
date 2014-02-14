@@ -10,13 +10,12 @@
 <script src =http://mrdoob.github.io/three.js/examples/js/controls/TrackballControls.js ></script>
 <script src =http://mrdoob.github.io/three.js/examples/js/libs/stats.min.js ></script>
 <script>
-// Airports to look at: EGLL KATL KJFK KSFO LFPG EGLL RJAA
+// Airports to look at: EGLL KATL KJFK KSFO LFPG EGLL 
 
 	var rev = '2.4';
 
 	var varIndex = [ 'zoom', 'lat', 'lon', 'icao', 'map', 'diagrams', 'scale', 'tiles', 'verts' ];
-	var varDefaults = [ 13, 37.78, -122.41, 'START', 3, 0, 10, 8, 32 ];
-	var varValues = varDefaults.slice();
+	var varValues = [ 13, 37.78, -122.41, 13228, 3, 0, 10, 8, 32 ];
 
 	var zoom;
 	var lat
@@ -28,13 +27,29 @@
 	var tilesPerSide;
 	var vertsPerTile;
 
+
+/*
+	var zoom = 13;
+
+// pretty place to start
+	var lat = 37.78; // gazetteer[ startPlace][2];
+	var lon = -122.41; // gazetteer[ startPlace][3];
+	var icaoStartPlace =  0;
+	var mapType = 3;
+	var displayDiagrams = 0;
+	var scaleVert = zoom - 3;
+	var tilesPerSide = 8;
+	var vertsPerTile = 32;
+*/
+
 	var icaoFileName = '../data/apt1000-icao.csv';
 	var icaoGazetteer;
 	var icaoIndex;
 
-	var ilsStartPlace;
 	var ilsFileName = '../apt1000/apt1000-ils.csv';
 	var ilsGazetteer;
+
+	var ilsStartPlace =  1; // San Francisco ~ but see below  //
 
 	var mapTypes = [
 		['Colorful',''],
@@ -101,7 +116,29 @@
 			icaoIndex.push( pl[0] );
 		}
 
+//		startPlace = parseInt( Math.random() * gazetteer.length, 10 );
+//		lat = icaoGazetteer[ icaoStartPlace ][2];
+//		lon = icaoGazetteer[ icaoStartPlace ][3];
+
 		parsePermalink();
+
+/*
+		hashes = location.hash.split('#');
+		zoom = ( hashes[1] !== undefined ) ? hashes[1] : zoom;
+		if ( hashes[2] !== undefined ) {
+			icaoStartPlace = icaoIndex.indexOf( hashes[2] );
+			lat = icaoGazetteer[ icaoStartPlace ][2];
+			lon = icaoGazetteer[ icaoStartPlace ][3];
+		}
+		displayDiagrams = ( hashes[3] !== undefined ) ? hashes[3] : displayDiagrams;
+//		lat = ( hashes[2] !== undefined ) ? hashes[2] : lat;
+//		lon = ( hashes[3] !== undefined ) ? hashes[3] : lon;
+		scaleVert = ( hashes[4] !== undefined ) ? hashes[4] : scaleVert;
+		mapType = ( hashes[5] !== undefined ) ? hashes[5] : mapType;
+
+//		xTile = (lon2tile( lon, 7 ));
+//		yTile = (lat2tile( lat, 7 ));
+*/
 
 		info = document.body.appendChild( document.createElement( 'div' ) );
 		info.id = 'movable';
@@ -176,8 +213,7 @@
 				'Lon: <input type="text" id="inpLon" value="' + lon +'" size=8 /> ' +
 				'<button onclick="lat = inpLat.value;  lon = inpLon.value; setLocation();" title="Click Go to update camera longitude and latitude" >Go</button><br>' +
 				'<select id=selPlace ' + 
-					'onchange="icaoStartPlace = ilsStartPlace = this.value; ' +
-					'inpLat.value = lat = ilsGazetteer[this.selectedIndex][2]; inpLon.value = lon = ilsGazetteer[this.selectedIndex][3]; setLocation();" >' +
+					'onchange="ilsStartPlace = this.value; inpLat.value = lat = ilsGazetteer[this.selectedIndex][2]; inpLon.value = lon = ilsGazetteer[this.selectedIndex][3]; setLocation();" >' +
 				'</select>' +
 
 				'<p><input id=chkdiagrams type="checkbox" onchange=updatediagrams(); >Diagrams</p>' +
@@ -206,8 +242,6 @@
 				selPlace.children[ selPlace.children.length - 1].title = pl[1];
 			}
 		}
-// Or should this be same as icoa?
-		ilsStartPlace = 0;
 		selPlace.selectedIndex = ilsStartPlace;
 		selPlace.title = 'Choose one of ' +  ilsGazetteer.length + ' airports';
 
@@ -524,8 +558,8 @@
 //		var resolution = 156543.034 * cos( ulLat) / pow( 2, zoom );
 //		var mPerTile = 40075016.686 * cos( ulLat) / pow( 2, zoom );
 //		var nmPerTile = 21638.777908207343 * cos( ulLat) / pow( 2, zoom );
-		var unitsPerNM = 256 * pow( 2, zoom ) / ( 21638.777908207343 * cos( ulLat * d2r) );
-console.log( unitsPerNM, cos( ulLat), ulLat );  
+		var unitsPerNM = 256 * pow( 2, zoom ) / ( 21638.777908207343 * cos( ulLat) );
+// console.log( mPerTile, nmPerTile, unitsPerNM );  
 
 		contextTest.drawImage( heightMap, 0, 0, heightMap.width , heightMap.height, 0, 0, canvasTest.width , canvasTest.height);
 
@@ -584,7 +618,6 @@ console.log( unitsPerNM, cos( ulLat), ulLat );
 					sprite.scale.set( 200, 100, 1 );
 					diagrams.add( sprite );
 
-					if ( place[0] === 'START' ) place[0] = 'KSFO';
 					airportData = requestFile( '../apt1000/' +  place[0] + '.json' );
 					var data = JSON.parse( airportData );
 
@@ -616,18 +649,17 @@ console.log( unitsPerNM, cos( ulLat), ulLat );
 							ils = data.ils[j];
 // console.log( ils );
 							if ( ils.type === 'ILS' ) {
-								xStart = xScale * ( ils.lon - lrLon );
+								xStart = xScale * ( ils.lon- lrLon );
 								zStart = zScale * ( ulLat - ils.lat );
-								length = unitsPerNM * ils.rng_nm;
-
+								length = unitsPerNM * ils.rng_nm
 // geometry = new THREE.CylinderGeometry( radiusTop, radiusBottom, height, radiusSegments, heightSegments, openEnded )
 								geometry = new THREE.CylinderGeometry( 30, 3, length, 20, 1, 1 );
 								geometry.applyMatrix( new THREE.Matrix4().makeTranslation( 0, 0.5 * length, 0) );
- 								geometry.applyMatrix( new THREE.Matrix4().makeRotationX( 1.45 ) );  // what is the correct angle?
+								geometry.applyMatrix( new THREE.Matrix4().makeRotationX( 1.45 ) );  // what is the correct angle?
 								material = new THREE.MeshBasicMaterial( { color: 0xff0000, opacity: 0.25, side: THREE.DoubleSide, transparent: true });
 								mesh = new THREE.Mesh( geometry, material );
 								mesh.position.set(  xStart + 1536, y, zStart - 512 );  // needs a formula...
- 								mesh.rotation.y = ( ils.hdg) * -d2r;
+								mesh.rotation.y = ( ils.hdg) * -d2r;
 								// mesh.lookAt( vStart );
 								diagrams.add( mesh );
 							} else 	if ( ils.lat < ulLat && ils.lat > lrLat && ils.lon > ulLon && ils.lon < lrLon ) {
@@ -733,7 +765,7 @@ console.log( unitsPerNM, cos( ulLat), ulLat );
 				aircraft.add( sprite );
 			}
 			txt += '<tr>' +
-			'<td><a href=JavaScript:lat=' + f.lat +';lon=' + f.lon + ';icaoStartPlace="";setLocation(); >' + f.callsign + '</a></td><td>' +  f.model.split('/')[1] + '</td><td>' +
+			'<td><a href=JavaScript:lat=' + f.lat +';lon=' + f.lon + ';setLocation(); >' + f.callsign + '</a></td><td>' +  f.model.split('/')[1] + '</td><td>' +
 			f.alt_ft + '</td><td>' + f.spd_kts + '</td><td>' + f.hdg + '</td><td>' +  f.lat  + '</td><td>' + f.lon  + '</td><td>' +  f.dist_nm + '</td>' +  
 			'</tr>';
 		}
@@ -744,23 +776,11 @@ console.log( unitsPerNM, cos( ulLat), ulLat );
 	}
 
 //	var varIndex = [ 'zoom', 'lat', 'lon', 'icao', 'map', 'diagrams', 'scale', 'tiles', 'verts' ];
-//	var varValues = [ 13, 37.78, -122.41, 'START', 3, 0, 10, 8, 32 ];
+//	var varValues = [ 13, 37.78, -122.41, 13228, 3, 0, 10, 8, 32 ];
 
 	function permalink() {
-		//window.location.hash = '#zoom=' + zoom + '#lat=' + lat + '#lon=' + lon +'#icao=' + icaoStartPlace + '#map=' + mapType + 
-		//'#diagrams=' + displayDiagrams + '#scale=' + scaleVert + '#tiles=' + tilesPerSide + '#verts=' + vertsPerTile ;
-		var txt = '';
-		if ( zoom !== varDefaults[0] ) txt += '#zoom=' + zoom;
-		if ( lat !== varDefaults[1] ) txt += '#lat=' + lat;
-		if ( lon !== varDefaults[2] ) txt += '#lon=' + lon;
-		if ( icaoStartPlace !== varDefaults[3] && icaoStartPlace !== "" ) txt += '#icao=' + icaoStartPlace;
-		if ( mapType !== varDefaults[4] ) txt += '#map=' + mapType;
-		if ( displayDiagrams !== varDefaults[5] ) txt += '#diagrams=' + displayDiagrams;
-		if ( scaleVert !== varDefaults[6] ) txt += '#scale=' + scaleVert;
-		if ( tilesPerSide !== varDefaults[7] ) txt += '#iles=' + tilesPerSide;
-		if ( vertsPerTile !== varDefaults[8] ) txt += '#verts=' + vertsPerTile;
-
-		window.location.hash = txt;
+		window.location.hash = '#zoom=' + zoom + '#lat=' + lat + '#lon=' + lon +'#icao=' + icaoIndex[ icaoStartPlace ] + '#map=' + mapType + 
+		'#diagrams=' + displayDiagrams + '#scale=' + scaleVert + '#tiles=' + tilesPerSide + '#verts=' + vertsPerTile ;
 	}
 
 	function parsePermalink() {
@@ -768,6 +788,7 @@ console.log( unitsPerNM, cos( ulLat), ulLat );
 		var index;
 		var hashes = location.hash.split('#');
 		var place = false;
+		
 
 		for (var i = 1, len = hashes.length; i < len; i++) {
 			item = hashes[i].split('=');
@@ -779,27 +800,44 @@ console.log( unitsPerNM, cos( ulLat), ulLat );
 		}
 
 //	var varIndex = [ 'zoom', 'lat', 'lon', 'icao', 'map', 'diagrams', 'scale', 'tiles', 'verts' ];
-//	var varValues = [ 13, 37.78, -122.41, 'START', 3, 0, 10, 8, 32 ];
+//	var varValues = [ 13, 37.78, -122.41, 1, 3, 0, 10, 8, 32 ];
+
+
 		zoom = parseInt( varValues[0], 10 );
+
+// pretty place to start
 		lat = parseFloat( varValues[1] );
 		lon = parseFloat( varValues[2] );
-		icaoStartPlace =  varValues[3].toUpperCase();
+		// varValues[3] );
 		if ( place == true ) {
-			var index = icaoIndex.indexOf( icaoStartPlace );
-			lat = icaoGazetteer[ index ][2];
-			lon = icaoGazetteer[ index ][3];
+			icaoStartPlace =  icaoIndex.indexOf( varValues[3].toUpperCase() );
+			lat = icaoGazetteer[ icaoStartPlace ][2];
+			lon = icaoGazetteer[ icaoStartPlace ][3];
 		}
 		mapType = parseInt( varValues[4], 10);
 		displayDiagrams = parseInt( varValues[5], 10);
 		scaleVert = parseInt( varValues[6], 10);
 		tilesPerSide = parseInt( varValues[7], 10 );
 		vertsPerTile = parseInt( varValues[8] );
-//	console.log( varIndex, varValues );
+
+/*
+		var txt = 'Variables:<br>';
+		for (var i = 0, len = varIndex.length; i < len; i++) {
+			txt += varIndex[i] + ': ' + varValues[i] +'<br>';
+		}
+*/
+
+		// hashText.innerHTML = 'Hash : ' + location.hash;
+		// messages.innerHTM0L = txt;
+		console.log( varIndex, varValues );
+		// messages.innerHTML = 'Hash parsed. Variables updated.';
 	}
 
 	function clearPermalink() {
 		window.history.pushState( '', '', window.location.pathname);
 	}
+
+
 
 	function viewPNG() {
 		window.location = 'http://jaanga.github.io/terrain-viewer/png-viewer/r3/png-viewer-r3.html#' + 

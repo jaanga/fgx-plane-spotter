@@ -11,7 +11,7 @@ There is no mechanism to follow an aircraft - apart from clicking on its lnk
 ## 2014-02-11 ~ FGx Plane Spotter r2.2 ~ Theo
 
 Planes: issues with aircraft altitudes and headings. Planes are probably heading magnetic and so far the app is true only.
-Sometimes the ILS cones point downward!?!
+Sometimes the ILS cones point downward!?! << 2014-02-14 ~ fixed. It was a degrees to rdians thing
 Lots of issues with diagrams and going to zoom level 7 and below. Thus mostly turned off for now.
 Must work on better formula for controlling the scaling of the elevations.
 
@@ -32,13 +32,19 @@ Comments to Yves in email:
 
 And, yes, here are dozens of things broken with this release.
 
-The break in the data in example you show is because the app is only showing 3D data from *one* of de Ferranti's height maps at a time. When you go over the edge of the particular height map data the remaining portions are drawn at an elevation of zero. Keep on moving. Once the upper left corner finds its way to the next de Ferranti heightmap, things are good again. Fixing this issue is going to be fun. When you get to a corner, instead of loading just one 3 MB bitmap file, you may have to load four!?!
+The break in the data in example you show is because the app is only showing 3D data from *one* of de Ferranti's height maps at a time. 
+When you go over the edge of the particular height map data the remaining portions are drawn at an elevation of zero. Keep on moving. 
+Once the upper left corner finds its way to the next de Ferranti heightmap, things are good again. 
+Fixing this issue is going to be fun. When you get to a corner, instead of loading just one 3 MB bitmap file, you may have to load four!?!
 
-And even when you do have the data, when you zoom in close, you see small gaps between tiles. This goes all the way to my continued ignorance of how de Ferranti's HGT files are organized through the GDAL conversion process and the JavaScript canvas tag mashup.
+And even when you do have the data, when you zoom in close, you see small gaps between tiles. 
+This goes all the way to my continued ignorance of how de Ferranti's HGT files are organized through the GDAL conversion process and the JavaScript canvas tag mashup.
 
-Almost all of these matters appear to me to be quite trivial - caused very much by my ignorance and being such a cartography/gdal newb. So it's just a question of time before these issues are resolved.
+Almost all of these matters appear to me to be quite trivial - caused very much by my ignorance and being such a cartography/gdal newb. 
+So it's just a question of time before these issues are resolved.
 
-BTW, this release is in the Jaanga project because - as you pointed out - of the GitHub CORS issues. But I believe this only need be temporary. I think that there are fairly easy ways of forking projects that may solve these issues. I need to do some experiments to confirm this.
+BTW, this release is in the Jaanga project because - as you pointed out - of the GitHub CORS issues. But I believe this only need be temporary. 
+I think that there are fairly easy ways of forking projects that may solve these issues. I need to do some experiments to confirm this.
 
 Again thanks for taking the time to have a look and comment,
 

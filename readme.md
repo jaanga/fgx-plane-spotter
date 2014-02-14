@@ -1,7 +1,7 @@
 FGx Plane Spotter Read Me
 ====================================================================================
 
-Live demo: [FGx Plane Spotter r2.2]( http://jaanga.github.io/fgx-plane-spotter/r2/fgx-plane-spotter-r2.html "Happy spotting!")
+Live demo: [FGx Plane Spotter r2.4]( http://jaanga.github.io/fgx-plane-spotter/r2/fgx-plane-spotter-r2.html "Happy spotting!")
 
 Live demo: [FGx Plane Spotter r1]( http://jaanga.github.io/fgx-plane-spotter/r1/index.html "Happy spotting!")
 
@@ -105,6 +105,12 @@ This app is at an early and volatile stage. Not all licensing requirements may h
 
 
 ## Change Log
+
+2014-02-14 ~ Theo
+
+* Cleaned up the menu structure
+* More robust permalink system - orderless, sparse and selective
+* Fixed the ILS pointing under ground thing. It was a degree to radians thing
 
 2014-02-13 ~ Theo
 

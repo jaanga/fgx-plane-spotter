@@ -1,5 +1,6 @@
 icao,name,lat,lon,runways,ils
 Select an airport,,,,,
+START,San Francisco Bay Area,37.78,-122.41,4,4
 40N,Chester Co G O Carlson,39.978961,-75.8654665,1,1
 AYPY,Port Moresby Jacksons Intl,-9.442079,147.2192,2,2
 BGTL,Thule Air Base,76.531203,-68.7031625,1,1

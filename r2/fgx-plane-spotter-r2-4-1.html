@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang=en>
 <head>
-<title>FGx Plane Spotter r2.5</title>
+<title>FGx Plane Spotter r2.4</title>
 <meta charset=utf-8>
 </head>
 <body>
@@ -12,7 +12,7 @@
 <script>
 // Airports to look at: EGLL KATL KJFK KSFO LFPG EGLL RJAA
 
-	var rev = '2.5';
+	var rev = '2.4';
 
 	var varIndex = [ 'zoom', 'lat', 'lon', 'icao', 'map', 'diagrams', 'scale', 'tiles', 'verts' ];
 	var varDefaults = [ 13, 37.78, -122.41, 'START', 3, 0, 10, 8, 32 ];
@@ -76,7 +76,6 @@
 
 	var offsetX;
 	var offsetY;
-	var projector, mouse = { x: 0, y: 0 }, INTERSECTED;
 
 	init();
 	animate();
@@ -91,7 +90,6 @@
 		'#movable { overflow: scroll; margin: 20px; padding: 30px 20px; position: absolute; resize: both; }' +
 		'';
 
-// load data needed for menu
 		var data = requestFile( icaoFileName );
 		var lines = data.split(/\r\n|\n/);
 		icaoGazetteer = [];
@@ -105,7 +103,6 @@
 
 		parsePermalink();
 
-// build menus / UI
 		info = document.body.appendChild( document.createElement( 'div' ) );
 		info.id = 'movable';
 		info.style.cssText = ' background-color: #ccc; left: 20px; opacity: 0.8; top: 20px; ';
@@ -164,7 +161,7 @@
 		crossfeedDiv.addEventListener( 'mousedown', mouseMove, false );
 		crossfeedDiv.innerHTML = crossfeedText = 
 			'<div id=closer onclick=crossfeedDiv.style.display="none"; >[x]</div>' +
-			'<h2>FGx Crossfeed</h2>' +
+			'<h1>FGx Crossfeed</h1>' +
 		'';
 
 		menuTop.innerHTML = 'Zoom: &nbsp;  &nbsp;<input title="0 to 18: OK" id=setZoom type=number min=0 max=18 step=1 value=' + zoom + 
@@ -195,11 +192,7 @@
 			'<a href=JavaScript:getTile("up"); >&#8679;</a> ' +
 			'<a href=JavaScript:getTile("down"); >&#8681;</a>' +
 		'</h1>' +
-		'<div>' +
-//			'<input list=lstICAO id=inpICAO >' +
-//			'<datalist id=lstICAO ></datalist> ' + 
-			'<a href=JavaScript:cameraToATC(); >Camera target to ATC</a>' +
-		'</div>';
+		'<div><a href=JavaScript:cameraToICAO(); >Camera to ICAO</a></div>';
 
 		data = requestFile( ilsFileName );
 		lines = data.split(/\r\n|\n/);
@@ -228,7 +221,6 @@
 
 		chkdiagrams.checked = displayDiagrams;
 
-// set up three.js
 		stats = new Stats();
 		stats.domElement.style.cssText = 'position: absolute; right: 0; top: 0; zIndex: 100; ';
 		document.body.appendChild( stats.domElement );
@@ -244,14 +236,12 @@
 		controls = new THREE.TrackballControls( camera, renderer.domElement );
 
 		THREE.ImageUtils.crossOrigin = 'anonymous';
-		projector = new THREE.Projector();
 
 // axes
 		scene.add( new THREE.ArrowHelper( v(1, 0, 0), v(0, 0, 0), 50, 0xcc0000) );
 		scene.add( new THREE.ArrowHelper( v(0, 1, 0), v(0, 0, 0), 30, 0x00cc00) );
 		scene.add( new THREE.ArrowHelper( v(0, 0, 1), v(0, 0, 0), 50, 0x0000cc) );
 
-// prepare for the heightmap work
 		heightMap = new Image();
 		heightMap.crossOrigin = "Anonymous";  
 
@@ -265,9 +255,7 @@
 		contextTest = canvasTest.getContext( '2d' );
 		contextTest.fillRect(0, 0, 255, 255 );
 
-// build the terrain and load anything else
 		setLocation();
-
 
 		var loader = new THREE.JSONLoader();
 		
@@ -278,19 +266,10 @@
 		} );
 
 		window.addEventListener('mouseup', mouseUp, false);
-
-/*  Takes too long
-		for ( var i = 2, length = ilsGazetteer.length - 1; i < length; i++ ) {
-				pl = ilsGazetteer[i];
-				lstICAO.appendChild( document.createElement( 'option' ) );
-				lstICAO.children[i - 2].value = pl[0];
-		}
-*/
 	}
 
 	function setLocation() {
 
-// do the required calculations, display results in menu if needed for debugging 
 		lat = parseFloat( lat );
 		lon = parseFloat( lon );
 
@@ -380,13 +359,11 @@
 			}
 		}
 		menuMiddle.innerHTML = txt + '<hr>';
+
 	}
 
 	function initCanvas() {
 		if ( terrain ) scene.remove( terrain );
-
-		resetCamera();
-
 		terrain = new THREE.Object3D();
 
 		canvas.width = heightMap.width;
@@ -439,9 +416,9 @@
 		}
 
 		var verts = geometry.vertices;
-		scl = 0.035 * scaleVert * ( zoom + 1);  // need a much better algo here...
+		scl = 0.035 * scaleVert * ( zoom + 1);
 
-		if 	( ( xStart < heightMap.width ) && ( yStart < heightMap.height ) )  {  // Should try and catch more edge conditions than this
+		if 	( ( xStart < heightMap.width ) && ( yStart < heightMap.height ) )  {
 			for (var i = 0, j = 0, len = imgd.length; i < len; i += 4) {
 				verts[j++].y = scl * imgd[i];
 			}
@@ -464,7 +441,6 @@
 
 	function initCanvasLowZoom() {
 		if ( terrain ) scene.remove( terrain );
-		resetCamera();
 
 		context.drawImage( heightMap, 0, 0, 256, 256 );
 		var imgd = context.getImageData( 0, 0, 256, 256 ).data;
@@ -503,9 +479,31 @@
 		}
 	}
 
-// top menu commands - build the augmented reality
+	function getTile( direction ) {
+		var max = pow( 2, zoom) - 1;
+		var jump = tilesPerSide / 2;
+		if ( direction === 'left' ) {
+			xTile -= jump;
+			if ( xTile < 0 ) xTile = max;
+		} else if ( direction === 'right' ) {
+			xTile += jump;
+			if ( xTile > max ) xTile = 0;
+		} else if ( direction === 'up' ) {
+			yTile -=jump;
+			if ( yTile < 0 ) y = max;
+		} else if ( direction === 'down' ) {
+			yTile += jump;
+			if ( yTile > max ) yTile = 0;
+		}
+		lon = tile2lon( xTile, zoom);
+		lat = tile2lat( yTile, zoom);
 
-	function updatediagrams() {
+		selPlace.selectedIndex = 0;
+
+		setLocation();
+	}
+
+	function updatediagrams( ttt ) {
 		if ( diagrams && diagrams.children.length > 0) {
 			scene.remove( diagrams );
 			diagrams.children.length = 0;
@@ -520,7 +518,7 @@
 		diagrams = new THREE.Object3D;
 		scene.add( diagrams );
 
-		var place, geometry, material, mesh, x, y, z;
+		var place, mesh, x, y, z;
 
 // console.log( ulLat, lrLat, deltaLats );
 // http://wiki.openstreetmap.org/wiki/Slippy_map_tilenames#Tile_servers: resolution = 156543.034 meters/pixel * cos(latitude) / (2 ^ zoomlevel) 
@@ -540,31 +538,28 @@
 		var lrLatHM = tile2lat( yHeightMapTile + 1, 7);
 		var deltaLatHM = Math.abs( tile2lat( yHeightMapTile, 7 ) - tile2lat( yHeightMapTile + 1, 7 ));
 
-		var xStart, yStart, xEnd, yEnd, vStart, vEnd, run, ils, nav;
-
 		geometry = new THREE.CubeGeometry( 5, 1, 5 );
+
+		var xStart, yStart, xEnd, yEnd, vStart, vEnd, run, ils, nav;
 
 		for ( var i = 0, iLen = ilsGazetteer.length; i < iLen; i++ ) {
 			place = ilsGazetteer[i];
 
 			if ( place[2] < ulLat && place[2] > lrLat && place[3] > ulLon && place[3] < lrLon ) {
-// LOD: what to show at varying zoom levels
 				if ( ( zoom > 10 ) || ( (zoom > 7) && (place[5] > 0) )  || ( place[5] > 3 ) ) {
 					xStart = canvasTest.width * Math.abs( ulLonHM - ulLon ) /  deltaLonHM;
 					yStart = canvasTest.height * Math.abs( ulLatHM - ulLat ) /  deltaLatHM;
 					xEnd = canvasTest.width * Math.abs( ulLon - lrLon ) /  deltaLonHM;
 					yEnd = canvasTest.height * Math.abs( ulLat - lrLat ) /  deltaLonHM;
 
-// show current zoom area in heightmap
 					contextTest.lineWidth = 1 ;
 					contextTest.strokeStyle = '#ff0000';
 					contextTest.strokeRect(  xStart - 20, yStart - 20, xEnd + 40, yEnd + 40);
 
 					xStart = canvasTest.width * Math.abs( ulLonHM - place[3] ) /  deltaLonHM;
 					yStart = canvasTest.height * ( ulLatHM - place[2] ) /  deltaLatHM;
+// console.log( xStart, yStart);
 					var spot = contextTest.getImageData( xStart, yStart, 1, 1 ).data;
-
-// show current airport in heighmap. Use with caution. If following target is on top of previous, reading is berserk.
 					//contextTest.lineWidth = 1 ;
 					//contextTest.strokeStyle = '#ff0000';
 					//contextTest.strokeRect(  xStart, yStart, 1, 1);
@@ -579,13 +574,11 @@
 					geometry = new THREE.CubeGeometry( 5, 1, 5 );
 					material = new THREE.MeshBasicMaterial( { color: 0x00ff00, opacity: 0.5, transparent: true });
 					mesh = new THREE.Mesh( geometry, material );
-					mesh.position.set( x + 1536, 7 * y, z - 512);
-					mesh.scale.y = 7 * y;
+					mesh.position.set( x + 1536, 0.5 * y, z - 512);
+					mesh.scale.y = y;
 					diagrams.add( mesh );
-					mesh.data = place;
-
 // console.log( terrain.geometry.boundingBox.max.y );
-					var texture = canvasText ( place[0], place[1], 'Altitude: ' + (spot[0] - 1.5 ) * 20, '#00ff00' ) ;
+					var texture = canvasText ( place[0], place[1], 'Altitude: ' + (spot[0] - 1.5 ) * 20 ) ;
 					var spriteMaterial = new THREE.SpriteMaterial( { map: texture, useScreenCoordinates: false, opacity: 1 } );
 					sprite = new THREE.Sprite( spriteMaterial );
 					sprite.position.set(  x + 1536, 200 +  ( 7 * spot[0] ), z - 512 );
@@ -595,7 +588,6 @@
 					if ( place[0] === 'START' ) place[0] = 'KSFO';
 					airportData = requestFile( '../apt1000/' +  place[0] + '.json' );
 					var data = JSON.parse( airportData );
-					material = new THREE.MeshBasicMaterial( { color: 0x222222, emissive: 0.8, opacity: 0.5, transparent: true });
 
 					for (var j = 0, len = data.runways.length; j < len; j++) {
 						run = data.runways[j];
@@ -608,21 +600,22 @@
 						vStart = v( xStart, y, zStart );
 						vEnd = v( xEnd, y, zEnd );
 						length = vStart.distanceTo( vEnd );
-						geometry = new THREE.CubeGeometry( 10, 5, length );
+						geometry = new THREE.CubeGeometry( 10, 10, length );
 						
 						mesh = new THREE.Mesh( geometry, material );
 						mesh.position.set(  xStart + 1536, y, zStart - 512 );
 						mesh.rotation.y = ( run.hdg) * -d2r;
+// mesh.lookAt( vStart );
 
 						mesh.translateZ( -0.5 * length );
 						diagrams.add( mesh );
-						mesh.data = run;
 					}
 
 					material = new THREE.MeshBasicMaterial( { color: 0xff0000, opacity: 0.5, side: THREE.DoubleSide, transparent: true });
 					if ( zoom > 9 ) {
 						for (var j = 0, len = data.ils.length; j < len; j++) {
 							ils = data.ils[j];
+// console.log( ils );
 							if ( ils.type === 'ILS' ) {
 								xStart = xScale * ( ils.lon - lrLon );
 								zStart = zScale * ( ulLat - ils.lat );
@@ -638,8 +631,6 @@
  								mesh.rotation.y = ( ils.hdg) * -d2r;
 								// mesh.lookAt( vStart );
 								diagrams.add( mesh );
-								mesh.data = ils;
-
 							} else 	if ( ils.lat < ulLat && ils.lat > lrLat && ils.lon > ulLon && ils.lon < lrLon ) {
 
 								xStart = xScale * ( ils.lon- lrLon );
@@ -649,7 +640,6 @@
 								mesh = new THREE.Mesh( geometry, material );
 								mesh.position.set(  xStart + 1536, y, zStart - 512 );  // needs a formula...
 								diagrams.add( mesh );
-								mesh.data = ils;
 							}
 						}
 						for (var j = 0, len = data.navaids.length; j < len; j++) {
@@ -662,7 +652,6 @@
 								mesh = new THREE.Mesh( geometry, material );
 								mesh.position.set(  xStart + 1536, y, zStart - 512 );  // needs a formula...
 								diagrams.add( mesh );
-								mesh.data = nav;
 							}
 						}
 					}
@@ -673,7 +662,7 @@
 			}
 		}
 
-		geometry = new THREE.CylinderGeometry( 12, 12, 80, 5 );
+		geometry = new THREE.CubeGeometry( 15, 80, 15 );
 		material = new THREE.MeshBasicMaterial( { color: 0x00ffff, opacity: 0.5, transparent: true });
 		for ( var i = 0, iLen = icaoGazetteer.length; i < iLen; i++ ) {
 			place = icaoGazetteer[i];
@@ -683,21 +672,84 @@
 					x = xScale * ( p3 - lrLon );
 					z = zScale * ( ulLat - p2 );
 					mesh = new THREE.Mesh( geometry, material );
-					mesh.position.set( x + 1536, y + 40, z - 512);
+					mesh.position.set( x + 1536, 0.5 * y, z - 512);
 					diagrams.add( mesh );
-					mesh.data = place;
 // console.log( place, mesh )
 			}
 		}
 	}
 
+	function canvasText( text1, text2, text3 ) {
+		var canvas = document.createElement( 'canvas' );
 
-// more handle commmands from top menus 
+		var context = canvas.getContext( '2d' );
+		context.font = '18px sans-serif';
+		var width = context.measureText( text2 );
+		canvas.width = ( width.width + 10) ; // 480
+		canvas.height = 50; //204
+
+		context.lineWidth = 1 ;
+		context.strokeStyle = '#00ff00';
+		context.strokeRect(0, 0, canvas.width, canvas.height);
+		context.fillStyle = '#00ff00';
+		context.font = '18px sans-serif';
+		context.fillText( text1, 5, 15 );
+		context.fillText( text2, 5, 30 );
+		context.fillText( text3, 5, 45 );
+
+		var texture = new THREE.Texture( canvas );
+		texture.needsUpdate = true;
+		return texture;
+	}
+
+	function getCrossfeed() {
+		crossfeed = JSON.parse( requestFile( 'http://crossfeed.fgx.ch/flights.json' ) ); 
+		if ( aircraft && aircraft.children.length > 0) { 
+			scene.remove( aircraft );
+			aircraft.children.length = 0;
+		}	
+
+		aircraft = new THREE.Object3D;
+		scene.add( aircraft );
+		var f, mesh, x, y, z;
+		var txt = '';
+		material = new THREE.MeshNormalMaterial();
+		
+		for ( var i = 0, iLen = crossfeed.flights.length; i < iLen; i++ ) {
+			f = crossfeed.flights[i];
+			if ( f.lat < ulLat && f.lat > lrLat && f.lon > ulLon  && f.lon < lrLon ) {
+				mesh = new THREE.Mesh( seymour, material );
+				x = xScale * ( f.lon - lrLon );
+				z = zScale * ( ulLat - f.lat);
+				y = ( f.alt_ft > 1000 ) ? 1000 : 15 + 0.5 * f.alt_ft;
+				mesh.position.set( x + 1536, y, z - 512);
+				mesh.rotation.y = f.hdg * d2r;
+				aircraft.add( mesh );
+// console.log( y )
+				var texture = canvasText ( f.alt_ft,f.callsign, f.model.split('/')[1] );
+				var spriteMaterial = new THREE.SpriteMaterial( { map: texture, useScreenCoordinates: false, opacity: 1 } );
+				sprite = new THREE.Sprite( spriteMaterial );
+				sprite.position.set( x + 1536, y + 30, z - 512);
+				sprite.scale.set( 100, 30, 1 );
+				aircraft.add( sprite );
+			}
+			txt += '<tr>' +
+			'<td><a href=JavaScript:lat=' + f.lat +';lon=' + f.lon + ';icaoStartPlace="";setLocation(); >' + f.callsign + '</a></td><td>' +  f.model.split('/')[1] + '</td><td>' +
+			f.alt_ft + '</td><td>' + f.spd_kts + '</td><td>' + f.hdg + '</td><td>' +  f.lat  + '</td><td>' + f.lon  + '</td><td>' +  f.dist_nm + '</td>' +  
+			'</tr>';
+		}
+		crossfeedDiv.innerHTML = crossfeedText + '<table><tr><td colspan=7>' +  crossfeed.flights.length + ' aircraft online</td></tr>' +  
+			'<tr><td>callsign </td><td>model</td><td>altitide </td><td>speed</td><td>heading</td><td>lat</td><td>lon</td><td>distance</td></tr>' + 
+			txt +
+		'</table>';
+	}
 
 //	var varIndex = [ 'zoom', 'lat', 'lon', 'icao', 'map', 'diagrams', 'scale', 'tiles', 'verts' ];
 //	var varValues = [ 13, 37.78, -122.41, 'START', 3, 0, 10, 8, 32 ];
 
 	function permalink() {
+		//window.location.hash = '#zoom=' + zoom + '#lat=' + lat + '#lon=' + lon +'#icao=' + icaoStartPlace + '#map=' + mapType + 
+		//'#diagrams=' + displayDiagrams + '#scale=' + scaleVert + '#tiles=' + tilesPerSide + '#verts=' + vertsPerTile ;
 		var txt = '';
 		if ( zoom !== varDefaults[0] ) txt += '#zoom=' + zoom;
 		if ( lat !== varDefaults[1] ) txt += '#lat=' + lat;
@@ -727,6 +779,8 @@
 			}
 		}
 
+//	var varIndex = [ 'zoom', 'lat', 'lon', 'icao', 'map', 'diagrams', 'scale', 'tiles', 'verts' ];
+//	var varValues = [ 13, 37.78, -122.41, 'START', 3, 0, 10, 8, 32 ];
 		zoom = parseInt( varValues[0], 10 );
 		lat = parseFloat( varValues[1] );
 		lon = parseFloat( varValues[2] );
@@ -753,34 +807,7 @@
 			lon2tile( parseFloat( lon), 7 ) + '#' + lat2tile( parseFloat(lat), 7 );
 	}
 
-// moving things about - bottom menu commands
-	function getTile( direction ) {
-		var max = pow( 2, zoom) - 1;
-		var jump = tilesPerSide / 2;
-		if ( direction === 'left' ) {
-			xTile -= jump;
-			if ( xTile < 0 ) xTile = max;
-		} else if ( direction === 'right' ) {
-			xTile += jump;
-			if ( xTile > max ) xTile = 0;
-		} else if ( direction === 'up' ) {
-			yTile -= jump;
-			if ( yTile < 0 ) y = max;
-		} else if ( direction === 'down' ) {
-			yTile += jump;
-			if ( yTile > max ) yTile = 0;
-		}
-		lon = tile2lon( xTile, zoom);
-		lat = tile2lat( yTile, zoom);
-
-		selPlace.selectedIndex = 0;
-		icaoStartPlace = '';
-
-		setLocation();
-	}
-
-	function cameraToATC() {
-		if ( icaoStartPlace ) {
+	function cameraToICAO() {
 			if  ( icaoStartPlace === 'START' ) icaoStartPlace = 'KSFO'; 
 			var index = icaoIndex.indexOf( icaoStartPlace );
 			var latICAO = icaoGazetteer[ index ][2];
@@ -788,47 +815,15 @@
 				x = xScale * ( lonICAO - lrLon );
 				z = zScale * ( ulLat - latICAO);
 
-// console.log( ulLat, lrLon, latICAO, lonICAO, ( lonICAO - ulLon), (ulLat - latICAO ), x, z)
+console.log( ulLat, lrLon, latICAO, lonICAO, ( lonICAO - ulLon), (ulLat - latICAO ), x, z)
 
+			// camera.position.set( x, 100, z );
+			// controls.target.set( x, 50, z );
 			controls.target.set( x + 1536, 50, z - 512);
 			camera.position.set( controls.target.x - 300, 100, controls.target.z );
-			camera.up = v( 0, 1, 0 );
-		} else {
-			messages.innerHTML = '<small style=color:red; >Please select an airport...</small>';
-		}
+
 	}
 
-	function resetCamera() {
-		controls.target.set( 0, 0, 0 );
-		camera.position.set( 1200, 400, 2000 );
-		camera.up = v( 0, 1, 0 );
-	}
-
-// Canvas work
-	function canvasText( text1, text2, text3, color ) {
-		var canvas = document.createElement( 'canvas' );
-
-		var context = canvas.getContext( '2d' );
-		context.font = '18px sans-serif';
-		var width = context.measureText( text2 );
-		canvas.width = ( width.width + 10) ; // 480
-		canvas.height = 50; //204
-
-		context.lineWidth = 1 ;
-		context.strokeStyle = color;
-		context.strokeRect(0, 0, canvas.width, canvas.height);
-		context.fillStyle = color ;
-		context.font = '18px sans-serif';
-		context.fillText( text1, 5, 15 );
-		context.fillText( text2, 5, 30 );
-		context.fillText( text3, 5, 45 );
-
-		var texture = new THREE.Texture( canvas );
-		texture.needsUpdate = true;
-		return texture;
-	}
-
-// The math
 // http://wiki.openstreetmap.org/wiki/Slippy_map_tilenames#Tile_servers
 	function lon2tile( lon, zoom ) {
 		return Math.floor( ( lon + 180 ) / 360 * pow( 2, zoom ) );
@@ -852,10 +847,9 @@
 	function pow( a, b ){ return Math.pow( a, b ); }
 	function v( x, y, z ){ return new THREE.Vector3( x, y, z ); }
 
-//	Array.max = function( array ){ return Math.max.apply( Math, array ); };
-//	Array.min = function( array ){ return Math.min.apply( Math, array ); };
+	Array.max = function( array ){ return Math.max.apply( Math, array ); };
+	Array.min = function( array ){ return Math.min.apply( Math, array ); };
 
-// file handling
 	function requestFile( fname ) {
 		var xmlHttp = new XMLHttpRequest();
 		xmlHttp.crossOrigin = "Anonymous"; 
@@ -864,21 +858,15 @@
 		return xmlHttp.responseText;
 	}
 
-// events
 	function mouseUp() {
 		window.removeEventListener('mousemove', divMove, true);
 	}
 
 	function mouseMove( event ){
 		if ( event.target.id === 'movable' ) {
-			event.preventDefault();
-
 			offsetX = event.clientX - event.target.offsetLeft;
 			offsetY = event.clientY - event.target.offsetTop;
 			window.addEventListener('mousemove', divMove, true);
-
-			mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
-			mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
 		}
 	}
 
@@ -887,93 +875,18 @@
 		event.target.style.top = ( event.clientY - offsetY ) + 'px';
 	}
 
-	function getCrossfeed() {
-		crossfeed = JSON.parse( requestFile( 'http://crossfeed.fgx.ch/flights.json' ) ); 
-		if ( aircraft && aircraft.children.length > 0) { 
-			scene.remove( aircraft );
-			aircraft.children.length = 0;
-		}	
-
-		aircraft = new THREE.Object3D;
-		scene.add( aircraft );
-		var f, mesh, x, y, z;
-		var txt = '';
-		material = new THREE.MeshNormalMaterial();
-		
-		for ( var i = 0, iLen = crossfeed.flights.length; i < iLen; i++ ) {
-			f = crossfeed.flights[i];
-			if ( f.lat < ulLat && f.lat > lrLat && f.lon > ulLon  && f.lon < lrLon ) {
-				mesh = new THREE.Mesh( seymour, material );
-				x = xScale * ( f.lon - lrLon );
-				z = zScale * ( ulLat - f.lat);
-				y = ( f.alt_ft > 1000 ) ? 1000 : 15 + 0.5 * f.alt_ft;
-				mesh.position.set( x + 1536, y, z - 512);
-				mesh.rotation.y = f.hdg * d2r;
-				aircraft.add( mesh );
-
-// signage needs work
-				var texture = canvasText ( f.alt_ft,f.callsign, f.model.split('/')[1], '#ffffff' );
-				var spriteMaterial = new THREE.SpriteMaterial( { map: texture, useScreenCoordinates: false, opacity: 1 } );
-				sprite = new THREE.Sprite( spriteMaterial );
-				sprite.position.set( x + 1536, y + 30, z - 512);
-				sprite.scale.set( 100, 30, 1 );
-				aircraft.add( sprite );
-			}
-
-			txt += '<tr>' +
-			'<td><a href=JavaScript:lat=' + f.lat +';lon=' + f.lon + ';icaoStartPlace="";setLocation(); >' + f.callsign + '</a></td><td>' +  f.model.split('/')[1] + '</td><td>' +
-			f.alt_ft + '</td><td>' + f.spd_kts + '</td><td>' + f.hdg + '</td><td>' +  f.lat  + '</td><td>' + f.lon  + '</td><td>' +  f.dist_nm + '</td>' +  
-			'</tr>';
-		}
-		crossfeedDiv.innerHTML = crossfeedText + '<table><tr><td colspan=7>' +  crossfeed.flights.length + ' aircraft online</td></tr>' +  
-			'<tr><td>callsign </td><td>model</td><td>altitide </td><td>speed</td><td>heading</td><td>lat</td><td>lon</td><td>distance</td></tr>' + 
-			txt +
-		'</table>';
-
-		tim = 0;
-	}
-
-
-	function findIntersects() {
-
-		camera.updateMatrixWorld();
-		var vector = v( mouse.x, mouse.y, 0.5 );
-		projector.unprojectVector( vector, camera );
-		var ray = new THREE.Raycaster( camera.position, vector.sub( camera.position ).normalize() );
-		var intersects = ray.intersectObjects( diagrams.children );
-		var d, b = '<br>';
-		if ( intersects.length > 0 ) {
-			if ( INTERSECTED != intersects[ 0 ].object ) {
-				if ( INTERSECTED ) {
-					d = INTERSECTED.data;
-					if ( d ) {
-					messages.innerHTML = 'type: ' + d.type + b +
-						'lat: ' + d.lat + b +
-						'lon: ' + d.lon + b;
-// console.log( INTERSECTED.data.type);
-					}
-				}
-				INTERSECTED = intersects[ 0 ].object;
-			}
-		} else {
-			INTERSECTED = null;
-			messages.innerHTML = '
-		}
-	}
-
-// heavy lifting
-
 	function animate() {
 		requestAnimationFrame( animate );
 		var delta = clock.getDelta()
-		controls.update( delta );
+		controls.update();
 		renderer.render( scene, camera );
 		stats.update();
 
 		tim += delta;
-		if ( tim > 3 ) getCrossfeed();
-
-		if ( diagrams ) findIntersects();
+		if ( tim > 3 ) {
+			getCrossfeed();
+			tim = 0;
+		}
 	}
 
 </script>

@@ -1,6 +1,11 @@
 FGx Plane Spotter Issues & Updates
 ==================================
 
+## 2014-02-14 ~  ~ FGx Plane Spotter r2.4 ~ Theo
+
+Help menu in wrong place
+Need to highlight which calsign has just been clicked
+
 ## 2014-02-12 ~ FGx Plane Spotter r2.2 ~ Theo
 
 A number of PNGs over the oceans are yet to exist...

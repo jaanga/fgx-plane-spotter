@@ -106,6 +106,14 @@ This app is at an early and volatile stage. Not all licensing requirements may h
 
 ## Change Log
 
+2014-02-15 ~ Theo
+
+* Comments added to code. Minor code clean-up
+* Reset camera position and target with each change of location
+* Add change camera target to ATC
+* Some playing with colors, shapes and sizes
+* Tiny bit of mouseover action
+
 2014-02-14 ~ Theo
 
 * Cleaned up the menu structure

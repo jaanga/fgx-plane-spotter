@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang=en>
+<head>
+<title>apt1000 data chechker</title>
+<meta charset=utf-8>
+<meta name=author content='Theo Armour'>
+</head>
+<body>
+<script>
+
+	document.body.style.cssText = ' font: bold 12pt monospace; ';
+	var info = document.body.appendChild( document.createElement( 'div' ) );
+	info.innerHTML = '<h1>apt1000 data checker</h1>' +
+		'<div id=content ></div>' +
+	'';
+
+	var icaoFileName = '../apt1000/apt1000-icao.csv';
+	var icaoGazetteer;
+
+	var ilsFileName = '../apt1000/apt1000-ils.csv';
+
+	var data = requestFile( icaoFileName );
+	var lines = data.split(/\r\n|\n/);
+	icaoGazetteer = [];
+	ilsGazetteer = [];
+
+	var found = [];
+
+	var pl, txt = '', b = '<br>';
+	for ( var i = 2, length = lines.length - 1; i < length; i++ ) {
+		pl = lines[i].split( ',' ) ;
+		if ( pl.length > 6 ) console.log (pl );
+		if ( pl[5] !== '0' ) {
+// console.log( i )
+			fname = '../apt1000/' + pl[0] + '.json';
+			// txt += fname + b;
+			found.push( pl[0] );
+			try {
+				airport = requestFile( fname );
+				// txt += 'Found: ' + pl[0] + ' - ' + pl[5] + b;
+			} 
+			catch(error) {
+				txt += 'Network error: ' + error + ' - ' + pl[0] + b;
+			}
+		}
+	}
+	content.innerHTML = txt + b + 'found: ' + found.length;
+
+
+// file handling
+	function requestFile( fname ) {
+		var xmlHttp = new XMLHttpRequest();
+		xmlHttp.crossOrigin = "Anonymous"; 
+		xmlHttp.open( 'GET', fname, false );
+		xmlHttp.send( null );
+		return xmlHttp.responseText;
+	}
+
+</script>
+</body>
+</html>

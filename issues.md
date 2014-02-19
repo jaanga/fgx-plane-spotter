@@ -78,6 +78,6 @@ Coming in the upcoming betas:
 * <s>Permalinks for the airports</s>
 * First person camera
 * <s>Div showing all the current craft in service</s>
-* Camera on airport control tower
+* <s>Camera on airport control tower</s>
 * <s>Zoom level-dependent display of all 34K+ ICOA Objects</s>   
 

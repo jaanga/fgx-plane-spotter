@@ -10,6 +10,9 @@
 	<a href=JavaScript:displayPage("issues.md",is); >Current Issues</a>
 </p>
 
+<p id=wl >
+	<a href=JavaScript:displayPage("wish-list.md",wl); >Wish List</a> and feature requests
+</p>
 
 ****
 

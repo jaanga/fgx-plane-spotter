@@ -1,7 +1,11 @@
 FGx Plane Spotter Read Me
 ====================================================================================
 
-Live demo: [FGx Plane Spotter r2.4]( http://jaanga.github.io/fgx-plane-spotter/r2/fgx-plane-spotter-r2.html "Happy spotting!")
+Live demo: [FGx Plane Spotter r2]( http://jaanga.github.io/fgx-plane-spotter/latest/index.html "Happy spotting!")  
+	
+- Latest: r2.5
+- Loads and displays all ICAO, navigation aids, helicopter pad and seaplane ports. See Help for color code
+- Bugs fixed that slowed things
 
 Live demo: [FGx Plane Spotter r1]( http://jaanga.github.io/fgx-plane-spotter/r1/index.html "Happy spotting!")
 
@@ -15,8 +19,8 @@ View live [FGx Crossfeed]( http://crossfeed.fgx.ch/data ) data - showing current
 
 ## Features
 * Shows FGx Crossfeed aircraft in 3D
-* Displays much data inclusing ILS cones for 2,136 airports and some data for over 27K ICAO listings 
-* Not right now: First person controller displays selected aircraft in front of camera
+* Displays much data including ILS cones for 2,136 airports and some data for over 27K ICAO listings 
+* Commabd to display selected aircraft in front of camera
 * Places dropdown lists the airports. 
 * See also the features of [Jaanga unFlatland]( http://jaanga.github.io/terrain-viewer/un-flatland/ ).
 	- FGx Plane Spotter is an app built on top of unFlatland which is a viewer of 3D [Jaanga Terrain]( http://jaanga.github.io/terrain/ ) data.
@@ -61,19 +65,7 @@ The FGx crew should decide whether or not to bring in Geoff's and maintain it as
 The titles of the above-mentioned three repositories are suggestions only.
 But the idea should be that a first time visitor to the FGx site has a fairly clear picture of what they are likely to find in a repository._
 
-### Specific Item Wish List
-See also Road Map for the generic underlying mapping app: [Jaanga Terrain Viewer]( http://jaanga.github.io/terrain-viewer )
 
-* Access to full list of 27K+ ICAO locations
-* ICAO Airports display runways and ILS geometry
-* Mouseover ICAO location displays heads-up window with further details
-* Mouseover aircraft displays window with further details - see FGx Globe
-* Cameras can be located at ATC position of current airport
-* Cameras can be associated with any aircraft
-* Display stars or clouds
-* Display real-time weather
-* Display 'smoke trails' showing aircraft path
-* Display aircraft instrument panels
 
 ## Issues /Bugs
 
@@ -105,6 +97,19 @@ This app is at an early and volatile stage. Not all licensing requirements may h
 
 
 ## Change Log
+
+2014-02-18 ~ Theo
+
+* Fixed Geoff's 'iles' find
+* Just reading apt1000-icao and the extractinf icaoGazetteer and ilsGazetteer from that.
+* Undid previous because 200 JSON files do not exist
+* Exclude anything not pure ILS from ILS
+* Load and draw all icao, heli, nav and sea
+* Redo the 'Just reading...' because I found I was loading the wong file
+* Add onerror to loading heitmaps
+* add 'latest' folder and index
+ 
+
 
 2014-02-15 ~ Theo
 

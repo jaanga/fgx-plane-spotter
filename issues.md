@@ -1,22 +1,29 @@
 FGx Plane Spotter Issues & Updates
 ==================================
 
+Things to remember:
+
+* It's always a good thing to have the JavaScript console open when you run this app.
+* You may be the first person in your country to look at this app/ Thus it may take a bit of time for all the caches along the way to load the data. So be patient.
+* When things are working well updates take only a second or two.
+* After the app has settled down on your machine, then try the permalinks and the other features
+
 ## 2014-02-14 ~  ~ FGx Plane Spotter r2.4 ~ Theo
 
 Help menu in wrong place
-Need to highlight which calsign has just been clicked
+Need to highlight which callsign has just been clicked
 
 ## 2014-02-12 ~ FGx Plane Spotter r2.2 ~ Theo
 
 A number of PNGs over the oceans are yet to exist...
 Draggable DIVs have issues being dragged
-There is no mechanism to follow an aircraft - apart from clicking on its lnk
+There is no mechanism to follow an aircraft - apart from clicking on its link
  
 
 ## 2014-02-11 ~ FGx Plane Spotter r2.2 ~ Theo
 
 Planes: issues with aircraft altitudes and headings. Planes are probably heading magnetic and so far the app is true only.
-Sometimes the ILS cones point downward!?! << 2014-02-14 ~ fixed. It was a degrees to rdians thing
+Sometimes the ILS cones point downward!?! << 2014-02-14 ~ fixed. It was a degrees to radians thing
 Lots of issues with diagrams and going to zoom level 7 and below. Thus mostly turned off for now.
 Must work on better formula for controlling the scaling of the elevations.
 

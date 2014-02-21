@@ -1,15 +1,24 @@
 Road Map
 ========
 
+2014-02-20 ~ Theo
+
+Let's make maps that change the world.
+
+Place camera and target by lat/lon/alt
+
+
+
+
 2014-02-19 ~ 
 
 Better signage 
 - with and size adjustments
 More signs with LOD
 Better shaping of objects
-Crossfeed box highlights currently sellected. Follws selected?
+Crossfeed box highlights currently selected. Follows selected?
 
-Look into forking
+Look into forking the PNG images
 
 
 2014-02-15 ~ Theo

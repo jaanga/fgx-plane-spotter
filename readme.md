@@ -98,6 +98,14 @@ This app is at an early and volatile stage. Not all licensing requirements may h
 
 ## Change Log
 
+2014-02-20 ~ Theo
+
+* Stingier hashes and permalinks
+* Started Adding camera position and target permalinks
+* Continued code cleanup now that no longer need to read two icao files.
+
+file:///C:/Dropbox/Public/git-repos/jaanga.github.io/projects/fgx-plane-spotter/r2/fgx-plane-spotter-r2.html#camx=4920#camy=120#camz=5150#targetx=3500#targety=200#targetz=-197#scale=40#tiles=24#verts=16#zoom=16#lat=37.88#lon=-122.5
+
 2014-02-18 ~ Theo
 
 * Fixed Geoff's 'iles' find

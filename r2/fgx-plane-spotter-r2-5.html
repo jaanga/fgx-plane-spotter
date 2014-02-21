@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang=en>
 <head>
-<title>FGx Plane Spotter r2.6</title>
+<title>FGx Plane Spotter r2.5</title>
 <meta charset=utf-8>
 </head>
 <body>
@@ -12,10 +12,10 @@
 <script>
 // Airports to look at: EGLL EHAM KATL KJFK KSFO LFPG LSZH RJAA
 
-	var rev = '2.6';
+	var rev = '2.5';
 
-	var varIndex = [ 'zoom', 'lat', 'lon', 'icao', 'map', 'diagrams', 'scale', 'tiles', 'verts', 'camx', 'camy', 'camz', 'targetx','targety', 'targetz' ];
-	var varDefaults = [ 13, 37.78, -122.41, 'Start location', 3, 0, 10, 8, 32, 1200, 400, 2000, 0, 0, 0 ];
+	var varIndex = [ 'zoom', 'lat', 'lon', 'icao', 'map', 'diagrams', 'scale', 'tiles', 'verts' ];
+	var varDefaults = [ 13, 37.78, -122.41, 'START', 3, 0, 10, 8, 32 ];
 	var varValues = varDefaults.slice();
 
 	var zoom;
@@ -27,8 +27,6 @@
 	var scaleVert;
 	var tilesPerSide;
 	var vertsPerTile;
-	var camX, camY, camZ;
-	var targetX, targetY, targetZ;
 
 	var icaoFileName = '../apt1000/apt1000-icao.csv';
 	var icaoGazetteer;
@@ -66,7 +64,6 @@
 	var diagrams;
 
 	var ulLat, ulLon, lrLat, lrLon, deltaLats, deltaLons;
-	var ulLonHM, lrLonHM, deltaLonHM, ulLatHM, lrLatHM, deltaLatHM;
 	var xScale, zScale;
 
 	var renderer, scene, camera, controls, stats;
@@ -98,21 +95,20 @@
 			'#movable { overflow: scroll; margin: 20px; padding: 30px 20px; position: absolute; resize: both; }' +
 		'';
 
+// load data needed for menu
 		var data = requestFile( icaoFileName );
 		var lines = data.split(/\r\n|\n/);
 		icaoGazetteer = [];
-		ilsGazetteer = [ [varDefaults[3],'San Francisco Bay',varDefaults[1],varDefaults[2],0,0] ];
+		icaoIndex = [];
+		ilsGazetteer = [];
 
 		for ( var i = 1, length = lines.length - 1; i < length; i++ ) {
 			pl = lines[i].split( ',' ) ;
 			icaoGazetteer.push( [ pl[0], pl[1], parseFloat( pl[2] ), parseFloat( pl[3] ), pl[4], pl[5] ] );
-			// icaoIndex.push( pl[0] );
-			//if ( pl[5] !== '0' ) {
-				//ilsGazetteer.push( pl );
-				//selPlace.appendChild( document.createElement( 'option' ) );
-				//selPlace.children[ selPlace.children.length - 1 ].text = pl[0];
-				//selPlace.children[ selPlace.children.length - 1].title = pl[1];
-			//}
+			icaoIndex.push( pl[0] );
+			if ( pl[5] !== '0' ) {
+				ilsGazetteer.push( pl );
+			}
 		}
 
 		parsePermalink();
@@ -215,37 +211,36 @@
 			'<a href=JavaScript:getTile("down"); >&#8681;</a>' +
 		'</h1>' +
 		'<div>' +
-			'<a href=JavaScript:cameraToATC(); >View the ATC</a> ' +
-			'<a href=JavaScript:cameraToPermalink(); >Link to View</a>' +
+//			'<input list=lstICAO id=inpICAO >' +
+//			'<datalist id=lstICAO ></datalist> ' + 
+			'<a href=JavaScript:cameraToATC(); >Camera target to ATC</a>' +
 		'</div>';
 
-// load data needed for menu
+		//data = requestFile( ilsFileName );
+		//lines = data.split(/\r\n|\n/);
+		//ilsGazetteer = [];
+
+		for ( var i = 0, length = ilsGazetteer.length; i < length; i++ ) {
+			//pl = lines[i].split( ',' ) ;
+			// gazetteer.push( [ pl[0], pl[1], parseFloat( pl[2] ), parseFloat( pl[3] ), pl[4], pl[5] ] );
+			//if ( pl[5] !== '0' ) { 
+				// ilsGazetteer.push( pl );
+			pl = ilsGazetteer[ i ];
+			selPlace.appendChild( document.createElement( 'option' ) );
+			selPlace.children[ selPlace.children.length - 1 ].text = pl[0];
+			selPlace.children[ selPlace.children.length - 1].title = pl[1];
+			//}
+		}
+// Or should this be same as icoa?
+		ilsStartPlace = 0;
+		selPlace.selectedIndex = ilsStartPlace;
+		selPlace.title = 'Choose one of ' +  ilsGazetteer.length + ' airports';
+
 		for ( var option, i = 0, len = mapTypes.length; i < len; i++ ) {
 			selMapType.appendChild( option = document.createElement( 'option' ) );
 			selMapType.children[i].text = mapTypes[i][0];
 		}
 		selMapType.selectedIndex = mapType;
-
-
-
-		selPlace.appendChild( document.createElement( 'option' ) );
-		selPlace.children[0].text = varDefaults[3];
-
-		for ( var i = 1, length = icaoGazetteer.length - 1; i < length; i++ ) {
-			pl = icaoGazetteer[i];
-			//icaoGazetteer.push( [ pl[0], pl[1], parseFloat( pl[2] ), parseFloat( pl[3] ), pl[4], pl[5] ] );
-			// icaoIndex.push( pl[0] );
-			if ( pl[5] !== '0' ) {
-				ilsGazetteer.push( pl );
-				selPlace.appendChild( document.createElement( 'option' ) );
-				selPlace.children[ selPlace.children.length - 1 ].text = pl[0];
-				selPlace.children[ selPlace.children.length - 1].title = pl[1];
-			}
-		}
-
-//		ilsStartPlace = 0;
-//		selPlace.selectedIndex = ilsStartPlace;
-		selPlace.title = 'Choose one of ' +  selPlace.children.length + ' airports';
 
 		chkdiagrams.checked = displayDiagrams;
 
@@ -261,9 +256,8 @@
 		scene = new THREE.Scene();
 
 		camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 10000 );
-		//camera.position.set( camX, camY, camZ );
+		camera.position.set( 1200, 400, 2000 );
 		controls = new THREE.TrackballControls( camera, renderer.domElement );
-		updateCamera();
 
 		THREE.ImageUtils.crossOrigin = 'anonymous';
 		projector = new THREE.Projector();
@@ -290,6 +284,7 @@
 // build the terrain and load anything else
 		setLocation();
 
+
 		var loader = new THREE.JSONLoader();
 		
 		loader.load( '../data/seymour.js', function( geometry ) { 
@@ -299,6 +294,14 @@
 		} );
 
 		window.addEventListener('mouseup', mouseUp, false);
+
+/*  Takes too long
+		for ( var i = 2, length = ilsGazetteer.length - 1; i < length; i++ ) {
+				pl = ilsGazetteer[i];
+				lstICAO.appendChild( document.createElement( 'option' ) );
+				lstICAO.children[i - 2].value = pl[0];
+		}
+*/
 	}
 
 	function setLocation() {
@@ -399,7 +402,7 @@
 	function initCanvas() {
 		if ( terrain ) scene.remove( terrain );
 
-//		resetCamera();
+		resetCamera();
 
 		terrain = new THREE.Object3D();
 
@@ -518,6 +521,10 @@
 	}
 
 // top menu commands - build the augmented reality
+
+	var ulLonHM, lrLonHM, deltaLonHM, ulLatHM, lrLatHM, deltaLatHM;
+
+
 	function updatediagrams() {
 		if ( diagrams && diagrams.children.length > 0) {
 			scene.remove( diagrams );
@@ -604,7 +611,7 @@
 					sprite.scale.set( 200, 100, 1 );
 					diagrams.add( sprite );
 
-					if ( place[0] === varDefaults[3] ) place[0] = 'KSFO';
+					if ( place[0] === 'START' ) place[0] = 'KSFO';
 					airportData = requestFile( '../apt1000/' +  place[0] + '.json' );
 					var data = JSON.parse( airportData );
 					material = new THREE.MeshBasicMaterial( { color: 0x222222, emissive: 0.8, opacity: 0.5, transparent: true });
@@ -651,8 +658,36 @@
 								// mesh.lookAt( vStart );
 								diagrams.add( mesh );
 								mesh.data = ils;
+/* not needed. Covered by navaids
+							} else 	if ( ils.lat < ulLat && ils.lat > lrLat && ils.lon > ulLon && ils.lon < lrLon ) {
+
+								xStart = xScale * ( ils.lon - lrLon );
+								zStart = zScale * ( ulLat - ils.lat );
+								geometry = new THREE.CubeGeometry( 5, 500, 5 );
+								material = new THREE.MeshBasicMaterial( { color: 0xffff00, opacity: 0.5, transparent: true }); // yellow
+								mesh = new THREE.Mesh( geometry, material );
+								mesh.position.set(  xStart + 1536, y, zStart - 512 );  // needs a formula...
+								diagrams.add( mesh );
+								mesh.data = ils;
+*/
 							}
 						}
+/* not needed. Covered by navaids
+						geometry = new THREE.CubeGeometry( 5, 500, 5 );
+						material = new THREE.MeshBasicMaterial( { color: 0xff00ff, opacity: 0.5, transparent: true }); // magenta
+						for (var j = 0, len = data.navaids.length; j < len; j++) {
+							nav = data.navaids[j];
+							if ( nav.lat < ulLat && nav.lat > lrLat && nav.lon > ulLon && nav.lon < lrLon ) {
+								xStart = xScale * ( nav.lon- lrLon );
+								zStart = zScale * ( ulLat - nav.lat );
+
+								mesh = new THREE.Mesh( geometry, material );
+								mesh.position.set(  xStart + 1536, y, zStart - 512 );  // needs a formula...
+								diagrams.add( mesh );
+								// mesh.data = nav;
+							}
+						}
+*/
 					}
 					messages.innerHTML = '';
 				} else {
@@ -690,6 +725,7 @@
 		scene.add( diagrams );
 	}
 
+
 	function drawAirportData( fName, la, ln, color ) {
 		var data = requestFile( fName );
 		var lines = data.split(/\r\n|\n/);
@@ -719,49 +755,26 @@
 	}
 
 // more handle commmands from top menus 
+//	var varIndex = [ 'zoom', 'lat', 'lon', 'icao', 'map', 'diagrams', 'scale', 'tiles', 'verts' ];
+var varDefaults = [ 13, 37.78, -122.41, 'START', 3, 0, 10, 8, 32 ];
 
 	function setPermalink() {
 		var txt = '';
-		if ( camX && camX !== varDefaults[9] ) txt += '#camx=' + parseInt( camX, 10 );
-		if ( camY && camY !== varDefaults[10] ) txt += '#camy=' + parseInt( camY, 10 );
-		if ( camZ && camZ !== varDefaults[11] ) txt += '#camz=' + parseInt( camZ, 10 );
-
-		if ( targetX && targetX !== varDefaults[12] ) txt += '#targetx=' + parseInt( targetX, 10 );
-		if ( targetY && targetY !== varDefaults[13] ) txt += '#targety=' + parseInt( targetY, 10 );
-		if ( targetZ && targetZ !== varDefaults[14] ) txt += '#targetz=' + parseInt( targetZ, 10 );
-
 		if ( displayDiagrams !== varDefaults[5] ) txt += '#diagrams=' + displayDiagrams;
-		if ( icaoStartPlace !== varDefaults[3].toUpperCase() && icaoStartPlace !== "" ) txt += '#icao=' + icaoStartPlace;
-
-		if ( icaoStartPlace !== varDefaults[3] && icaoStartPlace !== "" && lat !== varDefaults[1] ) txt += '#lat=' + lat;
-//		if ( icaoStartPlace === "" && lat !== varDefaults[1] ) txt += '#lat=' + lat;
-
+		if ( icaoStartPlace !== varDefaults[3] && icaoStartPlace !== "" ) txt += '#icao=' + icaoStartPlace;
+//		if ( icaoStartPlace !== varDefaults[3] && icaoStartPlace !== "" && lat !== varDefaults[1] ) txt += '#lat=' + lat;
+		if ( icaoStartPlace === "" && lat !== varDefaults[1] ) txt += '#lat=' + lat;
+//		if ( icaoStartPlace !== varDefaults[3] && icaoStartPlace !== "" && lon !== varDefaults[2] ) txt += '#lon=' + lon;
 		if ( icaoStartPlace !== varDefaults[3] && icaoStartPlace !== "" && lon !== varDefaults[2] ) txt += '#lon=' + lon;
-//		if ( icaoStartPlace === "" && lon !== varDefaults[2] ) txt += '#lon=' + lon;
-
 		if ( mapType !== varDefaults[4] ) txt += '#map=' + mapType;
 		if ( scaleVert !== varDefaults[6] ) txt += '#scale=' + scaleVert;
 		if ( tilesPerSide !== varDefaults[7] ) txt += '#tiles=' + tilesPerSide;
-
 		if ( vertsPerTile !== varDefaults[8] ) txt += '#verts=' + vertsPerTile;
 		if ( zoom !== varDefaults[0] ) txt += '#zoom=' + zoom;
 
 		window.location.hash = txt;
 	}
 
-	function cameraToPermalink() {
-		var txt = '';
-		camX = camera.position.x;
-		camY = camera.position.y;
-		camZ = camera.position.z;
-
-		targetX = controls.target.x;
-		targetY = controls.target.y;
-		targetZ = controls.target.z;
-
-		setPermalink();
-	}
-	
 	function parsePermalink() {
 		var item;
 		var index;
@@ -773,31 +786,16 @@
 			index = varIndex.indexOf( item[0] );
 			if ( index > -1 ) {
 				varValues[ index ] = item[1];
-				if ( index === 3  && item[1] !== varDefaults[3].toUpperCase() ) place = true;
-console.log( item[1], varDefaults[3].toUpperCase(), place )
+				if ( index === 3 ) place = true;
 			}
 		}
-
-		camX = parseFloat( varValues[9] );
-		camY = parseFloat( varValues[10] );
-		camZ = parseFloat( varValues[11] );
-
-		targetX = parseFloat( varValues[12] );
-		targetY = parseFloat( varValues[13] );
-		targetZ = parseFloat( varValues[14] );
 
 		zoom = parseInt( varValues[0], 10 );
 		lat = parseFloat( varValues[1] );
 		lon = parseFloat( varValues[2] );
 		icaoStartPlace =  varValues[3].toUpperCase();
 		if ( place == true ) {
-			// var index = icaoIndex.indexOf( icaoStartPlace );
-			for (var i = 0, len = icaoGazetteer.length; i < len; i++) {
-				if ( icaoGazetteer[i][0] === icaoStartPlace ) { 
-					index = i;
-					break;
-				} 
-			}
+			var index = icaoIndex.indexOf( icaoStartPlace );
 			lat = icaoGazetteer[ index ][2];
 			lon = icaoGazetteer[ index ][3];
 		}
@@ -844,16 +842,9 @@ console.log( item[1], varDefaults[3].toUpperCase(), place )
 	}
 
 	function cameraToATC() {
-		var index = 0;
 		if ( icaoStartPlace ) {
-			if  ( icaoStartPlace === varDefaults[3].toUpperCase() ) icaoStartPlace = 'KSFO'; 
-			//var index = icaoIndex.indexOf( icaoStartPlace );
-			for (var i = 0, len = icaoGazetteer.length; i < len; i++) {
-				if ( icaoGazetteer[i][0] === icaoStartPlace ) { 
-					index = i;
-					break;
-				} 
-			}
+			if  ( icaoStartPlace === 'START' ) icaoStartPlace = 'KSFO'; 
+			var index = icaoIndex.indexOf( icaoStartPlace );
 			var latICAO = icaoGazetteer[ index ][2];
 			var lonICAO = icaoGazetteer[ index ][3];
 			x = xScale * ( lonICAO - lrLon );
@@ -869,16 +860,8 @@ console.log( item[1], varDefaults[3].toUpperCase(), place )
 	}
 
 	function resetCamera() {
-		controls.target.set( varDefaults[12], varDefaults[13], varDefaults[14]  );
-		camera.position.set( varDefaults[9], varDefaults[10], varDefaults[11]  );
-		camera.up = v( 0, 1, 0 );
-	}
-
-	function updateCamera() {
-		controls.target.set( targetX, targetY, targetZ  );
-		camera.position.set( camX, camY, camZ );
-			//controls.target.set( x + 1536, 50, z - 512 );
-			//camera.position.set( camX + 1536, camY, camZ - 512);
+		controls.target.set( 0, 0, 0 );
+		camera.position.set( 1200, 400, 2000 );
 		camera.up = v( 0, 1, 0 );
 	}
 
@@ -1048,7 +1031,7 @@ console.log( item[1], varDefaults[3].toUpperCase(), place )
 		tim += delta;
 		if ( tim > 3 ) getCrossfeed();
 
-		//if ( diagrams ) findIntersects();
+		if ( diagrams ) findIntersects();
 	}
 
 </script>

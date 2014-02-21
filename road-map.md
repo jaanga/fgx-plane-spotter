@@ -1,6 +1,16 @@
 Road Map
 ========
 
+2014-02-19 ~ 
+
+Better signage 
+- with and size adjustments
+More signs with LOD
+Better shaping of objects
+Crossfeed box highlights currently sellected. Follws selected?
+
+Look into forking
+
 
 2014-02-15 ~ Theo
 You will see that the 'Diagram' portion of FGx Plane Spotter 2.2 is highly blocky and colorful (and incomplete ;-)

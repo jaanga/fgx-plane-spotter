@@ -1,16 +1,22 @@
 FGx Plane Spotter Read Me
-====================================================================================
+=========================
 
-Live demo: [FGx Plane Spotter r2]( http://jaanga.github.io/fgx-plane-spotter/latest/index.html "Happy spotting!")  
+<iframe src=http://jaanga.github.io/fgx-plane-spotter/latest/index.html width=96% height=600px >
+Visible only in HTML view here: http://jaanga.github.io/terrain-viewer/fgx-plane-spotter/ </iframe>  
+_Cropped iframe view of FGx Plane Spotter latest revision_
+
+Live demo: [FGx Plane Spotter (latest)]( http://jaanga.github.io/fgx-plane-spotter/latest/index.html "Happy spotting!")  
 	
-- Latest: r2.5
+- Latest: r2.6
 - Loads and displays all ICAO, navigation aids, helicopter pad and seaplane ports. See Help for color code
 - Bugs fixed that slowed things
 
 Live demo: [FGx Plane Spotter r1]( http://jaanga.github.io/fgx-plane-spotter/r1/index.html "Happy spotting!")
 
+* Earlier revision with some features not in the current release
+
 For the generic 3D map used as the basis here see also: [ Jaanga Terrain]( http://jaanga.github.io/terrain/ )  
-For other viewers of the data se also: [Jaanga Terrain Viewer]( http://jaanga.github.io/terrain-viewer/ )
+For other viewers of the data see also: [Jaanga Terrain Viewer]( http://jaanga.github.io/terrain-viewer/ )
 
 For [Leap Motion]( http://www.leapmotion.com/ ) device enabled and earlier versions see: [Flying Leap 3D]( https://github.com/jaanga/gestification/tree/gh-pages/projects/flying-leap-3d )
 
@@ -20,7 +26,7 @@ View live [FGx Crossfeed]( http://crossfeed.fgx.ch/data ) data - showing current
 ## Features
 * Shows FGx Crossfeed aircraft in 3D
 * Displays much data including ILS cones for 2,136 airports and some data for over 27K ICAO listings 
-* Commabd to display selected aircraft in front of camera
+* Command to display selected aircraft in front of camera
 * Places dropdown lists the airports. 
 * See also the features of [Jaanga unFlatland]( http://jaanga.github.io/terrain-viewer/un-flatland/ ).
 	- FGx Plane Spotter is an app built on top of unFlatland which is a viewer of 3D [Jaanga Terrain]( http://jaanga.github.io/terrain/ ) data.
@@ -73,7 +79,7 @@ But the idea should be that a first time visitor to the FGx site has a fairly cl
 
 ## Project Links
 
-Given the currennt CORS issues, you now have four ways of viewing the FGx Plane Spotter files:
+Given the current CORS issues, you now have four ways of viewing the FGx Plane Spotter files:
 
 * Code hosted on GitHub: [jaanga.github.io]( http://jaanga.github.io/fgx-plane-spotter/ "view the files as apps." ) <input value="<< You are now probably here." size=28 style="font:bold 12pt monospace;border-width:0;" >  
 * Source code on GitHub: [github.com/jaanga]( https://github.com/jaanga/fgx-plane-spotter/ "View the files as source code." ) <scan style=display:none ><< You are now probably here.</scan>
@@ -103,6 +109,7 @@ This app is at an early and volatile stage. Not all licensing requirements may h
 * Stingier hashes and permalinks
 * Started Adding camera position and target permalinks
 * Continued code cleanup now that no longer need to read two icao files.
+* Updates to menu and read me files
 
 file:///C:/Dropbox/Public/git-repos/jaanga.github.io/projects/fgx-plane-spotter/r2/fgx-plane-spotter-r2.html#camx=4920#camy=120#camz=5150#targetx=3500#targety=200#targetz=-197#scale=40#tiles=24#verts=16#zoom=16#lat=37.88#lon=-122.5
 

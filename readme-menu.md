@@ -16,6 +16,7 @@
 
 ****
 
+Allied sties:  
 [FGx on GitHub]( http://fgx.github.io )  
 [FGx.ch]( http://fgx.ch )  
 
@@ -26,3 +27,4 @@
 ****
 
 [Source Code on GitHub]( https://github.com/jaanga/fgx-plane-spotter/ )
+[Copyright and License]( https://github.com/jaanga/jaanga.github.io/blob/master/jaanga-copyright-and-mit-license.md )

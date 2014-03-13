@@ -7,7 +7,7 @@ _Cropped iframe view of FGx Plane Spotter latest revision_
 
 Live demo: [FGx Plane Spotter (latest)]( http://jaanga.github.io/fgx-plane-spotter/latest/index.html "Happy spotting!")  
 	
-- Latest: r2.6
+- Latest: r3
 - Loads and displays all ICAO, navigation aids, helicopter pad and seaplane ports. See Help for color code
 - Bugs fixed that slowed things
 
@@ -103,6 +103,10 @@ This app is at an early and volatile stage. Not all licensing requirements may h
 
 
 ## Change Log
+
+2014-03-12 ~ Theo
+
+* r3 committed
 
 2014-02-20 ~ Theo
 

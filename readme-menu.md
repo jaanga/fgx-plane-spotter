@@ -5,6 +5,7 @@
 	<a href=JavaScript:displayPage("readme.md",rm); >Read Me</a>
 </p>
 
+[Plane Spotter - Latest Revision]( ./latest/index.html )
 
 <p id=is >
 	<a href=JavaScript:displayPage("issues.md",is); >Current Issues</a>
@@ -13,6 +14,14 @@
 <p id=wl >
 	<a href=JavaScript:displayPage("wish-list.md",wl); >Wish List</a> and feature requests
 </p>
+
+See also:  
+
+[San Francisco WebG Meet-Up 2014-03-13 - Presentation]( ../../events/sf-webgl-2014-03-13/r1/demo/sf-webgl-2014-03-13.html )
+
+[San Francisco WebG Meet-Up 2014-03-13 - Read Me]( ../../events/sf-webgl-2014-03-13/index.html )
+
+
 
 ****
 

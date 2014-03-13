@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang=en >
+<head>
+<title>FGx Plane Spotter R3</title>
+<meta charset=utf-8 >
+</head>
+<body>
+<script src = http://mrdoob.github.io/three.js/build/three.min.js ></script>
+<script src = http://mrdoob.github.io/three.js/examples/js/controls/TrackballControls.js ></script>
+<script src = http://mrdoob.github.io/three.js/examples/js/libs/stats.min.js ></script>
+<script src = ../../../terrain-viewer/un-flatland/r10/un-flatland-r10.js ></script>
+<script src = ../../../terrain-viewer/un-flatland/r10/un-flatland-r10-menu.js ></script>
+<script src = fgx-crossfeed-r3.js ></script>
+<script src = fgx-navaids-r3.js ></script>
+<script>
+// Interesting places. Possibly to add to gazetteer
+
+// BGBW, EGNS / isle of Man
+// PHOG hawaii
+
+	uf.title = 'FGx Plane Spotter R3';
+
+	document.body.style.cssText = ' margin: 0; overflow: hidden; ';
+
+	uf.defaults.location = 'San Francisco CA';
+	uf.defaults.placards = 0;
+
+	uf.init();
+
+	addMenu(); // in un-flatland-rxx-menu.js
+	addHelp(); // ditto
+	addCrossfeed();
+	addNavaids();
+
+	animate(); // custom animate in un-flatland-rxx-menu.js
+
+</script>
+</body>
+</html>

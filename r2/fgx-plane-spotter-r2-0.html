@@ -365,9 +365,9 @@
 
 
 		if 	( ( xStart < heightMap.width ) && ( yStart < heightMap.height ) )  {
-				for (var i = 0, j = 0, len = imgd.length; i < len; i += 4) {
-					verts[j++].y = scl * imgd[i];
-				}
+			for (var i = 0, j = 0, len = imgd.length; i < len; i += 4) {
+				verts[j++].y = scl * imgd[i];
+			}
 		}
 
 		var mesh = new THREE.Mesh( geometry, material );

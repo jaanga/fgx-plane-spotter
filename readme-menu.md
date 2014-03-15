@@ -15,20 +15,15 @@
 	<a href=JavaScript:displayPage("wish-list.md",wl); >Wish List</a> and feature requests
 </p>
 
-See also:  
+See also:
 
-[San Francisco WebG Meet-Up 2014-03-13 - Presentation]( ../../events/sf-webgl-2014-03-13/r1/demo/sf-webgl-2014-03-13.html )
-
-[San Francisco WebG Meet-Up 2014-03-13 - Read Me]( ../../events/sf-webgl-2014-03-13/index.html )
+[San Francisco WebG Meet-Up 2014-03-13]( http://jaanga.github.io/events/sf-webgl-2014-03-13/readme-reader.html  )
 
 
 
 ****
 
-Allied sties:  
-
-2014-02-22 ~ Much going on here:   
-[FGx Airports]( http://fgx.github.io/fgx-airports/ )  
+Allied sites:
 
 [FGx on GitHub]( http://fgx.github.io )  
 [FGx.ch]( http://fgx.ch )  

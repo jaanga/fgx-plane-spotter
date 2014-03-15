@@ -7,7 +7,7 @@
 	var icaoIndex;
 
 	var ilsStartPlace;
-	var ilsFileName = '../apt1000/apt1000-ils.csv';
+	var ilsFileName = '../../apt1000/apt1000-ils.csv';
 	var ilsGazetteer;
 
 	var navaidsFileName = '../../apt1000/apt1000-nav.csv';

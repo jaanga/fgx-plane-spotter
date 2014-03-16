@@ -26,7 +26,6 @@ View live [FGx Crossfeed]( http://crossfeed.fgx.ch/data ) data - showing current
 ## Features
 * Shows FGx Crossfeed aircraft in 3D
 * Displays much data including ILS cones for 2,136 airports and some data for over 27K ICAO listings 
-* Command to display selected aircraft in front of camera
 * Places dropdown lists the airports. 
 * See also the features of [Jaanga unFlatland]( http://jaanga.github.io/terrain-viewer/un-flatland/ ).
 	- FGx Plane Spotter is an app built on top of unFlatland which is a viewer of 3D [Jaanga Terrain]( http://jaanga.github.io/terrain/ ) data.
@@ -104,6 +103,11 @@ This app is at an early and volatile stage. Not all licensing requirements may h
 
 ## Change Log
 
+2014-03-16 ~ Theo
+
+* Code clean up
+& Fix Cmera to ATC
+
 2014-03-12 ~ Theo
 
 * r3 committed
@@ -114,8 +118,6 @@ This app is at an early and volatile stage. Not all licensing requirements may h
 * Started Adding camera position and target permalinks
 * Continued code cleanup now that no longer need to read two icao files.
 * Updates to menu and read me files
-
-file:///C:/Dropbox/Public/git-repos/jaanga.github.io/projects/fgx-plane-spotter/r2/fgx-plane-spotter-r2.html#camx=4920#camy=120#camz=5150#targetx=3500#targety=200#targetz=-197#scale=40#tiles=24#verts=16#zoom=16#lat=37.88#lon=-122.5
 
 2014-02-18 ~ Theo
 

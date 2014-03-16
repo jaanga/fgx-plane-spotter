@@ -46,7 +46,7 @@
 //		var goodies = [[ 'sonNabisco','KSFO'], ['heatLow','EGLL'], ['hampsterDam','EHAM'], ['adLanda','KATL'], 
 //			['nudeJoke','KJFK'], ['fromage','LFPG'], ['zooWreck','LSZH'], ['noRider','RJAA'] ];
 		var goodies = [ 'KSFO','EGLL','EHAM','KATL','KJFK','LFPG','LSZH','RJAA','NZQN'];
-		for ( var i = 0, length = ilsGazetteer.length; i < length; i++ ) {
+		for ( i = 0, length = ilsGazetteer.length; i < length; i++ ) {
 			pl = ilsGazetteer[i];
 			selILS.appendChild( document.createElement( 'option' ) );
 			selILS.children[ i ].text = pl[0];
@@ -74,7 +74,6 @@
 		selGoodies.onchange = function() { selILS.selectedIndex = selGoodies[ selGoodies.selectedIndex].pointer; selILS.onchange(); };
 
 		chkdiagrams.checked = displayDiagrams;
-
 	}
 
 	function cameraToATC() {
@@ -85,22 +84,20 @@
 			var lat = parseFloat( place[2] ); 
 			var lon = parseFloat( place[3] ); 
 			var alt = getAltitude( lat, lon );
-			point.alt = uf.scaleVerticalCurrent * alt;
+			alt = uf.scaleVerticalCurrent * alt;
 
-			inpTarAlt.value = uf.tarAlt = scale * alt;
+			inpTarAlt.value = uf.tarAlt = alt;
 			inpTarLat.value = uf.tarLat = lat;
 			inpTarLon.value = uf.tarLon = lon;
 
-			inpCamAlt.value = uf.camAlt = scale * alt;
-			inpCamLat.value = uf.camLat = lat - 0.01;
+			inpCamAlt.value = uf.camAlt = alt;
+			inpCamLat.value = uf.camLat = lat - 0.03;
 			inpCamLon.value = uf.camLon = lon;
 
 			updateCameraTarget();
-
 		} else {
 			messages.innerHTML = '<small style=color:red; >Please select an airport...</small>';
 		}
-		//inpCamLat.value
 	}
 
 	function updateDiagrams() {
@@ -184,7 +181,7 @@
 
 					material = new THREE.MeshBasicMaterial( { color: 0xff0000, opacity: 0.5, side: THREE.DoubleSide, transparent: true });
 					if ( uf.zoom > 9 ) {
-						for (var j = 0, len = data.ils.length; j < len; j++) {
+						for ( j = 0, len = data.ils.length; j < len; j++ ) {
 							ils = data.ils[j];
 							if ( ils.desc.search('ILS') > -1 ) {
 								point = uf.getPoint( ils.lat, ils.lon, uf.zoom );
@@ -199,8 +196,8 @@
 								geometry.applyMatrix( new THREE.Matrix4().makeRotationX( 1.45 ) );  // what is the correct angle?
 								material = new THREE.MeshBasicMaterial( { color: 0xff0000, opacity: 0.25, side: THREE.DoubleSide, transparent: true });
 								mesh = new THREE.Mesh( geometry, material );
-								mesh.position.set(  point.ptX, 5 + point.alt, point.ptY );  // needs a formula...
-								mesh.rotation.y = ( ils.hdg) * -d2r;
+								mesh.position.set( point.ptX, 5 + point.alt, point.ptY );
+								mesh.rotation.y = ils.hdg * -d2r;
 								diagrams.add( mesh );
 							}
 						}
@@ -221,7 +218,7 @@
 		function drawAirportData( fName, la, ln, color ) {
 			var data = requestFile( fName );
 			var lines = data.split(/\r\n|\n/);
-			var geometry = new THREE.CylinderGeometry( 12, 12, 80, 5 );
+			var geometry = new THREE.CylinderGeometry( 1, 12, 80, 5 );
 			var material = new THREE.MeshBasicMaterial( { color: color, opacity: 0.5, transparent: true }); 
 			var place, lat, lon, point, alt, mesh;
 

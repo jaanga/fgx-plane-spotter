@@ -146,7 +146,7 @@
 				if ( place[5] > 0 ) {
 					var unitsPerNM = 256 * Math.pow( 2, uf.zoom ) / ( 21638.777908207343 * Math.cos( uf.ulLat * d2r) ); 
 
-					airportData = requestFile( '../../apt1000/' +  place[0] + '.json' );
+					airportData = requestFile( '../apt1000/' +  place[0] + '.json' );
 					var data = JSON.parse( airportData );
 					material = new THREE.MeshBasicMaterial( { color: 0xeeeeee, emissive: 0.3, opacity: 0.8, transparent: true });
 

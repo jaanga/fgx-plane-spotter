@@ -76,6 +76,7 @@
 		uf.scene.add( aircraft );
 	}
 
+// supersedes the othe anumation functions
 	function animate() {
 		requestAnimationFrame( animate );
 		var delta = clock.getDelta();
@@ -88,7 +89,7 @@
 			uf.update = false;
 		}
 		tim += delta;
-		if ( tim > 3 ) {
+		if ( tim > 3 ) {  // seconds
 			getCrossfeed();
 			tim = 0;
 		}

@@ -20,7 +20,7 @@
 
 		var loader = new THREE.JSONLoader();
 
-		loader.load( '../../data/seymour.js', function( geometry ) {
+		loader.load( '../data/seymour.js', function( geometry ) {
 			geometry.applyMatrix( new THREE.Matrix4().makeRotationY( pi ) );
 			geometry.applyMatrix( new THREE.Matrix4().multiplyScalar( 3 ) );
 			seymour = geometry;

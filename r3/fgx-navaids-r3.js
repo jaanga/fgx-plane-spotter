@@ -2,17 +2,17 @@
 	var displayDiagrams = false;
 	var diagrams;
 
-	var icaoFileName = '../../apt1000/apt1000-icao.csv';
+	var icaoFileName = '../apt1000/apt1000-icao.csv';
 	var icaoGazetteer;
 	var icaoIndex;
 
 	var ilsStartPlace;
-	var ilsFileName = '../../apt1000/apt1000-ils.csv';
+	var ilsFileName = '../apt1000/apt1000-ils.csv';
 	var ilsGazetteer;
 
-	var navaidsFileName = '../../apt1000/apt1000-nav.csv';
-	var heliFileName = '../../apt1000/apt1000-heli.csv';
-	var seaFileName = '../../apt1000/apt1000-sea.csv';
+	var navaidsFileName = '../apt1000/apt1000-nav.csv';
+	var heliFileName = '../apt1000/apt1000-heli.csv';
+	var seaFileName = '../apt1000/apt1000-sea.csv';
 
 	function addNavaids() {
 		var data = requestFile( icaoFileName );

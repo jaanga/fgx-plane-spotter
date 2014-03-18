@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang=en>
+<head>
+<title></title>
+<meta charset=utf-8>
+<meta name=author content='Theo Armour'>
+</head>
+<body>
+<script>
+
+
+
+	init();
+
+	function init() {
+		document.body.style.cssText = ' font: bold 12pt monospace; ';
+
+		var info = document.body.appendChild( document.createElement( 'div' ) );
+		info.innerHTML = '<h1>Howdy</h1>' +
+			'<div id=msg></div>';
+
+		msg.innerHTML = requestFile( 'http://mpserver15.flightgear.org/modules/fgtracker/interface.php?action=livepilots' );
+
+	}
+
+	function requestFile( fname ) {
+		var xmlHttp = new XMLHttpRequest();
+		xmlHttp.crossOrigin = "Anonymous";
+		xmlHttp.open( 'GET', fname, false );
+		xmlHttp.send( null );
+		return xmlHttp.responseText;
+	}
+</script>
+</body>
+</html>

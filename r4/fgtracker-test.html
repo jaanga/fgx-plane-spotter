@@ -23,12 +23,18 @@
 
 	}
 
+var xmlHttp;
 	function requestFile( fname ) {
-		var xmlHttp = new XMLHttpRequest();
+		xmlHttp = new XMLHttpRequest();
 		xmlHttp.crossOrigin = "Anonymous";
-		xmlHttp.open( 'GET', fname, false );
+		xmlHttp.open( 'GET', fname, true );
 		xmlHttp.send( null );
-		return xmlHttp.responseText;
+
+		xmlhttp.onreadystatechange=function() {
+			if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+				msg.innerHTML=xmlhttp.responseText;
+			}
+		}
 	}
 </script>
 </body>

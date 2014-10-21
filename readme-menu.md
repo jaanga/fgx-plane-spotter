@@ -2,17 +2,17 @@
 ==================================================
 
 <p id=rm >
-	<a href=JavaScript:displayPage("readme.md",rm); >Read Me</a>
+	<a href=JavaScript:displayPage("#readme.md#rm"); >Read Me</a>
 </p>
 
 &raquo; [Plane Spotter - Latest Revision]( ./latest/index.html )
 
 <p id=is >
-	<a href=JavaScript:displayPage("issues.md",is); >Current Issues</a>
+	<a href=JavaScript:displayPage("#issues.md#is"); >Current Issues</a>
 </p>
 
 <p id=wl >
-	<a href=JavaScript:displayPage("wish-list.md",wl); >Wish List and feature requests</a> 
+	<a href=JavaScript:displayPage("#wish-list.md#wl"); >Wish List and feature requests</a> 
 </p>
 
 <br>

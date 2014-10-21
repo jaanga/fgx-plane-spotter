@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang=en>
+<head>
+<title></title>
+<meta charset=utf-8>
+<meta name=author content='Theo Armour'>
+</head>
+<body>
+<script>
+    var xmlhttp;
+
+    init();
+
+	function init() {
+		document.body.style.cssText = ' font: bold 12pt monospace; ';
+
+		var info = document.body.appendChild( document.createElement( 'div' ) );
+		info.innerHTML = '<h1>FG Tracker Get</h1>' +
+			'<div id=msg>messages here...</div>';
+
+		requestFile( 'http://mpserver15.flightgear.org/modules/fgtracker/interface.php?action=livepilots' );
+
+	}
+
+	function requestFile( fname ) {
+		xmlhttp = new XMLHttpRequest();
+		xmlhttp.crossOrigin = "Anonymous";
+		xmlhttp.onreadystatechange=function() {
+			if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+				msg.innerHTML=xmlhttp.responseText;
+            } else {
+                console.log( 'waiting...' );
+                console.log( '1. file.readyState', xmlhttp.readyState);
+                console.log( '2. file.responseXML', xmlhttp.responseXML);
+                console.log( '3. file.status', xmlhttp.status);
+                console.log( '4. file.statusText', xmlhttp.statusText );
+            }    
+		}
+		xmlhttp.open( 'GET', fname, true );
+		xmlhttp.send( null );        
+	}
+
+</script>
+</body>
+</html>

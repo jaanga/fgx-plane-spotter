@@ -3,33 +3,34 @@
 
 	var aircraft;
 	var seymour;
-	var crossfeed, crossfeedDiv, crossfeedText;
+	var fgTracker, fgTrackerDiv, fgTrackerText;
 
 	var pi = Math.PI, pi05 = pi * 0.5;
 	var d2r = pi / 180, r2d = 180 / pi;  // degress / radians
 
-	function addCrossfeed() {
-		crossfeedDiv = document.body.appendChild( document.createElement( 'div' ) );
-		crossfeedDiv.id = 'movable';
-		crossfeedDiv.style.cssText = ' background-color: #ccc; height: 300px; right: 20px; opacity: 0.8; bottom: 20px; width: 300px; ';
-		crossfeedDiv.addEventListener( 'mousedown', mouseMove, false );
-		crossfeedDiv.innerHTML = crossfeedText =
-			'<div id=closer onclick=crossfeedDiv.style.display="none"; >[x]</div>' +
-			'<h2>FGx Crossfeed</h2>' +
+	function addFGTracker() {
+		fgTrackerDiv = document.body.appendChild( document.createElement( 'div' ) );
+		fgTrackerDiv.id = 'movable';
+		fgTrackerDiv.style.cssText = ' background-color: #ccc; height: 300px; right: 20px; opacity: 0.8; bottom: 20px; width: 300px; ';
+		fgTrackerDiv.addEventListener( 'mousedown', mouseMove, false );
+		fgTrackerDiv.innerHTML = fgTrackerText =
+			'<div id=closer onclick=fgTrackerDiv.style.display="none"; >[x]</div>' +
+			'<h2>FGx FG Tracker</h2>' +
 		'';
 
 		var loader = new THREE.JSONLoader();
 
-		loader.load( '../data/seymour.js', function( geometry ) {
+		loader.load( '../data/paperairplane.js', function( geometry ) {
 			geometry.applyMatrix( new THREE.Matrix4().makeRotationY( pi ) );
 			geometry.applyMatrix( new THREE.Matrix4().multiplyScalar( 3 ) );
 			seymour = geometry;
 		} );
 	}
 
-	function getCrossfeed() {
-		crossfeed = JSON.parse( requestFile( 'http://crossfeed.freeflightsim.org/flights.json' ) );
-		if ( !crossfeed ) return;
+	function getFGTracker() {
+//		fgTracker = JSON.parse( requestFile( 'http://mpserver15.flightgear.org/modules/fgtracker/interface.php?action=livepilots' ) );
+		fgTracker = JSON.parse( requestFile( 'http://crossfeed.freeflightsim.org/flights.json' ) );
+		if ( !fgTracker ) return;
 		if ( aircraft && aircraft.children.length > 0) {
 			uf.scene.remove( aircraft );
 			aircraft.children.length = 0;
@@ -46,8 +47,8 @@
 		var distance = uf.camera.position.distanceTo( uf.controls.target );
 		var scalePlacard = 0.0002 * distance;
 
-		for ( var i = 0, iLen = crossfeed.flights.length; i < iLen; i++ ) {
-			f = crossfeed.flights[i];
+		for ( var i = 0, iLen = fgTracker.flights.length; i < iLen; i++ ) {
+			f = fgTracker.flights[i];
 			if ( f.lat < uf.ulLat && f.lat > uf.lrLat && f.lon > uf.ulLon  && f.lon < uf.lrLon ) {
 				point = uf.getPoint( f.lat, f.lon, uf.zoom );
 				point.ptX += off + uf.tileSize * ( point.tileX - pointStart.tileX );
@@ -68,7 +69,7 @@
 			f.alt_ft + '</td><td>' + f.spd_kts + '</td><td>' + f.hdg + '</td><td>' +  f.lat  + '</td><td>' + f.lon  + '</td><td>' +  f.dist_nm + '</td>' +
 			'</tr>';
 		}
-		crossfeedDiv.innerHTML = crossfeedText + '<table><tr><td colspan=7>' +  crossfeed.flights.length + ' aircraft online</td></tr>' +
+		fgTrackerDiv.innerHTML = fgTrackerText + '<table><tr><td colspan=7>' +  fgTracker.flights.length + ' aircraft online</td></tr>' +
 			'<tr><td>callsign </td><td>model</td><td>altitide </td><td>speed</td><td>heading</td><td>lat</td><td>lon</td><td>distance</td></tr>' +
 			txt +
 		'</table>';
@@ -76,7 +77,7 @@
 		uf.scene.add( aircraft );
 	}
 
-// supersedes the othe anumation functions
+// supersedes the other animation functions
 	function animate() {
 		requestAnimationFrame( animate );
 		var delta = clock.getDelta();
@@ -90,7 +91,7 @@
 		}
 		tim += delta;
 		if ( tim > 3 ) {  // seconds
-			getCrossfeed();
+			getFFTracker();
 			tim = 0;
 		}
 	}

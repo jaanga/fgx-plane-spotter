@@ -1,9 +1,5 @@
 
-<<<<<<< HEAD
 	var displayDiagrams = true;
-=======
-	var displayDiagrams = false;
->>>>>>> origin/gh-pages
 	var diagrams;
 
 	var icaoFileName = '../apt1000/apt1000-icao.csv';

@@ -28,7 +28,11 @@
 	}
 
 	function getCrossfeed() {
+<<<<<<< HEAD
 		crossfeed = JSON.parse( requestFile( 'http://crossfeed.freeflightsim.org/flights.json' ) );
+=======
+		crossfeed = JSON.parse( requestFile( 'http://crossfeed.fgx.ch/flights.json' ) );
+>>>>>>> origin/gh-pages
 		if ( !crossfeed ) return;
 		if ( aircraft && aircraft.children.length > 0) {
 			uf.scene.remove( aircraft );
